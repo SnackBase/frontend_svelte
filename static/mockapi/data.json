@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Cola 0,33 L",
+        "price": 0.70,
+        "type": "drink",
+        "currency": "Euro",
+        "currencySymbol": "€"
+    },
+    {
+        "id": 2,
+        "name": "Cola Zero 0,33 L",
+        "price": 0.70,
+        "type": "drink",
+        "currency": "Euro",
+        "currencySymbol": "€"
+    },
+    {
+        "id": 3,
+        "name": "Snickers",
+        "price": 0.40,
+        "type": "snack",
+        "currency": "Euro",
+        "currencySymbol": "€"
+    }
+]
