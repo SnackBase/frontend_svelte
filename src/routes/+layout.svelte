@@ -16,31 +16,33 @@
 </svelte:head>
 
 <!-- PAGE ROOT -->
-<div class="flex min-h-screen flex-col font-sans">
+<div class="flex min-h-screen flex-col font-sans dark:bg-gray-950 dark:text-white">
 	<!-- HEADER -->
 	<header class="w-full">
 		<div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4">
 			<a href="/" class="flex items-center gap-4">
-				<img src={favicon} width="40" alt="Logo" />
+				<img src="/favicon.ico" width="40" alt="Logo" class="dark:invert" />
 				<h1 class="text-xl font-semibold">DrinkBar</h1>
 			</a>
 
-			<nav class="flex gap-4">
-				<NavBarPageLink name="app - first" route="app/first" />
-				<NavBarPageLink name="app - first - lower" route="app/first/lower" />
-			</nav>
+			{#if data.session?.user?.email}
+				<nav class="flex gap-4">
+					<NavBarPageLink name="app - first" route="app/first" />
+				</nav>
+			{/if}
 
 			<!-- <TextButton handler={signIn}>Log In</TextButton> -->
 			<div class="flex space-x-2">
-				<!-- <TextButton handler={() => signIn()}>Log In</TextButton>
-				<TextButton handler={() => signOut()}>Log Out</TextButton> -->
-				<ButtonStyle><SignIn /></ButtonStyle>
-				<ButtonStyle><SignOut /></ButtonStyle>
-				<img
-					src={data.session?.user?.image ?? person}
-					alt="User Avatar"
-					class="inline-block size-10 rounded-full ring-2 ring-gray-900 outline -outline-offset-1 outline-white/10"
-				/>
+				{#if data.session?.user?.email}
+					<TextButton handler={() => signOut()}>Log Out</TextButton>
+					<img
+						src={data.session?.user?.image ?? person}
+						alt="User Avatar"
+						class="inline-block size-10 rounded-full ring-2 outline -outline-offset-1 outline-white/10"
+					/>
+				{:else}
+					<TextButton handler={() => signIn()}>Log In</TextButton>
+				{/if}
 			</div>
 		</div>
 
