@@ -1,10 +1,12 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import person from '$lib/assets/person.svg';
 	import TextButton from '$lib/components/TextButton.svelte';
 	import NavBarPageLink from '$lib/components/NavBarPageLink.svelte';
-	import ButtonStyle from '$lib/styles/ButtonStyle.svelte';
+	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { SignIn, SignOut } from '@auth/sveltekit/components';
+	import ButtonStyle from '$lib/styles/ButtonStyle.svelte';
 
 	let { children, data } = $props();
 </script>
@@ -24,16 +26,18 @@
 			</a>
 
 			<nav class="flex gap-4">
-				<NavBarPageLink name="first" />
-				<NavBarPageLink name="second" />
+				<NavBarPageLink name="app - first" route="app/first" />
+				<NavBarPageLink name="app - first - lower" route="app/first/lower" />
 			</nav>
 
 			<!-- <TextButton handler={signIn}>Log In</TextButton> -->
 			<div class="flex space-x-2">
-				<ButtonStyle><SignIn signInPage="signin">Log In</SignIn></ButtonStyle>
-				<ButtonStyle><SignOut>Log Out</SignOut></ButtonStyle>
+				<!-- <TextButton handler={() => signIn()}>Log In</TextButton>
+				<TextButton handler={() => signOut()}>Log Out</TextButton> -->
+				<ButtonStyle><SignIn /></ButtonStyle>
+				<ButtonStyle><SignOut /></ButtonStyle>
 				<img
-					src={data.session?.user?.image ?? 'https://i.pravatar.cc/300'}
+					src={data.session?.user?.image ?? person}
 					alt="User Avatar"
 					class="inline-block size-10 rounded-full ring-2 ring-gray-900 outline -outline-offset-1 outline-white/10"
 				/>
