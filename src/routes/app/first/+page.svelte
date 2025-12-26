@@ -2,4 +2,4 @@
 	import ButtonStyle from '$lib/styles/ButtonStyle.svelte';
 </script>
 
-<a href="/"><ButtonStyle>Back Home</ButtonStyle></a>
+<a href="/" class="flex"><ButtonStyle>Back Home</ButtonStyle></a>
