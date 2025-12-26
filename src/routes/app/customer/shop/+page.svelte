@@ -5,8 +5,26 @@
 	let { data }: PageProps = $props();
 </script>
 
-<div class="xs:grid-cols-2 grid grid-cols-2 justify-start gap-4 sm:grid-cols-3 md:grid-cols-4">
-	{#each data.product_data as product}
-		<ProductCard {product} />
-	{/each}
-</div>
+{#await data.product_data}
+	<!-- LOADING -->
+	<div class="flex justify-center py-16">
+		<div
+			class="h-10 w-10 animate-spin rounded-full
+			       border-4 border-gray-300
+			       border-t-blue-500"
+		></div>
+	</div>
+{:then products}
+	<!-- DATA -->
+	<div
+		class="grid grid-cols-2 gap-4
+		       sm:grid-cols-3 md:grid-cols-4"
+	>
+		{#each products as product}
+			<ProductCard {product} />
+		{/each}
+	</div>
+{:catch error}
+	<!-- ERROR -->
+	<p class="text-red-500">Failed to load products</p>
+{/await}

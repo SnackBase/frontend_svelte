@@ -2,8 +2,15 @@ import type { PageServerLoad } from './$types';
 import type { Product } from '$lib/types/product';
 
 export const load = (async () => {
-	let product_response = await fetch('http://localhost:5173/mockapi/data.json');
-	let product_data: Product[] = await product_response.json();
-	// console.log(product_data);
-	return { product_data };
+	const product_data: Promise<Product[]> = Promise.all([
+		// artificial delay TODO: delete
+		new Promise((resolve) => setTimeout(resolve, 1_000)),
+
+		// data fetch
+		fetch('http://localhost:5173/mockapi/data.json').then((res) => res.json())
+	]).then(([, products]) => products);
+
+	return {
+		product_data
+	};
 }) satisfies PageServerLoad;

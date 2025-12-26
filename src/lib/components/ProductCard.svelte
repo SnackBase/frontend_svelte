@@ -6,7 +6,10 @@
 	let count = $state(0);
 </script>
 
-<div class="max-w-sm space-y-1 rounded-xl border p-4">
+<div
+	class="max-w-sm space-y-1 rounded-xl border p-4"
+	title="{product.name} - {CurrencyFormatter.format(product.price)}"
+>
 	<img
 		src={product.image}
 		alt={product.name}

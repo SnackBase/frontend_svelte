@@ -15,6 +15,10 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
+{#snippet colorGradientHorizontalLine()}
+	<div class="h-1 bg-linear-to-r from-sky-500 via-purple-500 to-pink-500"></div>
+{/snippet}
+
 <!-- PAGE ROOT -->
 <div class="flex min-h-screen flex-col font-sans dark:bg-gray-950 dark:text-white">
 	<!-- HEADER -->
@@ -67,7 +71,7 @@
 			</div>
 		</div>
 
-		<div class="h-1 bg-linear-to-r from-sky-500 via-purple-500 to-pink-500"></div>
+		{@render colorGradientHorizontalLine()}
 	</header>
 
 	<!-- MAIN CONTENT (GROWS) -->
@@ -79,7 +83,7 @@
 
 	<!-- FOOTER -->
 	<footer class="mt-auto">
-		<div class="h-1 bg-linear-to-r from-sky-500 via-purple-500 to-pink-500"></div>
+		{@render colorGradientHorizontalLine()}
 		<p class="p-4">This is the Footer. Here might be a link to the impressum.</p>
 		<!-- TODO: add impressum and other necessary information -->
 	</footer>
