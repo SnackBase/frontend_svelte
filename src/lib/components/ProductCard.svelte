@@ -25,7 +25,7 @@
 		<button
 			onclick={() => product.decrement()}
 			aria-label="Decrease quantity"
-			class="group shrink-0 rounded-l-full border-2 py-2 pr-2 pl-4
+			class="group sm:p-l-2 shrink-0 rounded-l-full border-2 p-2
 	       hover:border-blue-500 hover:text-blue-500"
 		>
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@
 		<button
 			onclick={() => product.increment()}
 			aria-label="Increase quantity"
-			class="group shrink-0 rounded-r-full border-2 py-2 pr-4 pl-2
+			class="group sm:p-l-2 shrink-0 rounded-r-full border-2 p-2
 	       hover:border-blue-500 hover:text-blue-500"
 		>
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

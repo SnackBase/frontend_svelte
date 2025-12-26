@@ -24,24 +24,26 @@
 <div class="flex min-h-screen flex-col font-sans dark:bg-gray-950 dark:text-white">
 	<!-- HEADER -->
 	<header class="w-full">
-		<div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4">
-			<a href="/" class="flex items-center gap-4">
+		<div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4">
+			<a href="/" class="flex shrink-0 items-center gap-2 sm:gap-4">
 				<img src="/favicon.ico" width="40" alt="Logo" class="dark:invert" />
-				<h1 class="text-xl font-semibold">DrinkBar</h1>
+				<h1 class="hidden text-xl font-semibold sm:block">DrinkBar</h1>
 			</a>
 
 			{#if data.session?.user?.email}
-				<nav class="flex gap-4">
-					<NavBarPageLink name="app - first" route="app/first" />
+				<nav class="flex gap-2 sm:gap-3 lg:gap-4">
 					<NavBarPageLink name="Shop" route="app/customer/shop" />
 				</nav>
 			{/if}
 
-			<!-- <TextButton handler={signIn}>Log In</TextButton> -->
-			<div class="flex items-center space-x-2">
+			<div class="flex shrink-0 items-center gap-1 sm:gap-2">
 				{#if data.session?.user?.email}
 					<!-- Shopping Cart Icon with Badge -->
-					<a href="/app/customer/cart" class="relative p-2 hover:text-blue-500 transition-colors">
+					<a
+						href="/app/customer/cart"
+						class="relative p-2 transition-colors hover:text-blue-500"
+						aria-label="Shopping Cart"
+					>
 						<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
 							<path
 								fill="currentColor"
@@ -57,34 +59,50 @@
 						{/if}
 					</a>
 
-					<TextButton handler={() => signOut()}
-						><div class="flex gap-2">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-								<path
-									fill="currentColor"
-									d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"
-								/>
-							</svg>
-							<div>Log Out</div>
-						</div></TextButton
+					<button
+						onclick={() => signOut()}
+						class="w-max-1 flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-white p-2 transition-colors hover:bg-gray-100 sm:size-full sm:w-auto sm:gap-2 sm:px-4 dark:hover:bg-gray-800"
+						aria-label="Log Out"
 					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							class="shrink-0"
+						>
+							<path
+								fill="currentColor"
+								d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"
+							/>
+						</svg>
+						<div class="hidden sm:block">Log Out</div>
+					</button>
 					<img
 						src={data.session?.user?.image ?? person}
 						alt="User Avatar"
-						class="inline-block size-10 rounded-full ring-2 outline -outline-offset-1 outline-white/10"
+						class="hidden size-10 shrink-0 rounded-full ring-2 outline -outline-offset-1 outline-white/10 sm:inline-block"
 					/>
 				{:else}
-					<TextButton handler={() => signIn()}
-						><div class="flex gap-2">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-								<path
-									fill="currentColor"
-									d="M12 21v-2h7V5h-7V3h7q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm-2-4l-1.375-1.45l2.55-2.55H3v-2h8.175l-2.55-2.55L10 7l5 5z"
-								/>
-							</svg>
-							<div>Log In</div>
-						</div></TextButton
+					<button
+						onclick={() => signIn()}
+						class="flex size-10 shrink-0 items-center justify-center rounded-full p-2 transition-colors hover:bg-gray-100 sm:w-auto sm:gap-2 sm:rounded-lg sm:px-4 dark:hover:bg-gray-800"
+						aria-label="Log In"
 					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							class="shrink-0"
+						>
+							<path
+								fill="currentColor"
+								d="M12 21v-2h7V5h-7V3h7q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm-2-4l-1.375-1.45l2.55-2.55H3v-2h8.175l-2.55-2.55L10 7l5 5z"
+							/>
+						</svg>
+						<div class="hidden sm:block">Log In</div>
+					</button>
 				{/if}
 			</div>
 		</div>
