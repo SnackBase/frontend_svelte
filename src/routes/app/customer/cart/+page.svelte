@@ -30,21 +30,18 @@
 </script>
 
 {#snippet productInCart(product: Product)}
-	<div class="flex items-start gap-3 rounded-2xl border p-3">
+	<div class="flex gap-3 rounded-2xl border p-3">
 		<img src={product.image} alt={product.name} class="size-18 rounded-2xl bg-white object-cover" />
-		<div class="flex min-w-0 flex-1 flex-col justify-between gap-2">
-			<div class="flex flex-col">
-				<div class="font-semibold">{product.name}</div>
-				<div class="text-sm text-gray-500">
-					{product.count} x {CurrencyFormatter.format(product.price)}
-				</div>
-			</div>
-			<div class="flex items-center justify-between gap-2">
+
+		<div class="flex flex-1 flex-col justify-between">
+			<div class="font-semibold">{product.name}</div>
+
+			<div class="flex flex-row justify-between">
 				<div class="flex items-center gap-2">
 					<button
 						onclick={() => product.decrement()}
 						aria-label="Decrease quantity"
-						class="flex size-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors hover:border-blue-500 hover:text-blue-500"
+						class="flex size-8 items-center justify-center rounded-full border-2 hover:border-blue-500 hover:text-blue-500"
 					>
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
 							<path fill="currentColor" d="M6 13h12v-2H6z" />
@@ -54,7 +51,7 @@
 					<button
 						onclick={() => product.increment()}
 						aria-label="Increase quantity"
-						class="flex size-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors hover:border-blue-500 hover:text-blue-500"
+						class="flex size-8 items-center justify-center rounded-full border-2 hover:border-blue-500 hover:text-blue-500"
 					>
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
 							<path fill="currentColor" d="M6 13h12v-2H6z" />
@@ -62,8 +59,14 @@
 						</svg>
 					</button>
 				</div>
-				<div class="shrink-0 font-bold">
-					{CurrencyFormatter.format(product.count * product.price)}
+
+				<div class="flex flex-col justify-between text-right">
+					<div class="text-sm text-gray-500">
+						{product.count} × {CurrencyFormatter.format(product.price)}
+					</div>
+					<div class="font-bold">
+						{CurrencyFormatter.format(product.count * product.price)}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -133,7 +136,7 @@
 					type="button"
 					onclick={handleCheckoutClick}
 					disabled={isCheckingOut}
-					class="group relative w-full rounded-lg bg-blue-500 px-6 py-3 font-semibold text-white transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+					class="group relative w-full rounded-full bg-blue-500 px-6 py-3 font-semibold text-white transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
 				>
 					<span class="flex items-center justify-center gap-2">
 						Checkout
