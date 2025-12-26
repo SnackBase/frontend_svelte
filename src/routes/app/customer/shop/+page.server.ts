@@ -1,8 +1,7 @@
 import type { PageServerLoad } from './$types';
-import type { Product } from '$lib/types/product';
 
 export const load = (async () => {
-	const product_data: Promise<Product[]> = Promise.all([
+	const product_data = Promise.all([
 		// artificial delay TODO: delete
 		new Promise((resolve) => setTimeout(resolve, 1_000)),
 

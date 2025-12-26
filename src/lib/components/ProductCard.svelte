@@ -1,9 +1,8 @@
 <script lang="ts">
-	import type { Product } from '$lib/types/product';
+	import type { Product } from '$lib/types/product.svelte';
 	import { CurrencyFormatter } from '$lib/utils/CurrencyFormatter';
 
 	let { product }: { product: Product } = $props();
-	let count = $state(0);
 </script>
 
 <div
@@ -24,7 +23,7 @@
 
 	<div class="flex w-full overflow-hidden">
 		<button
-			onclick={() => count > 0 && count--}
+			onclick={() => product.decrement()}
 			aria-label="Decrease quantity"
 			class="group shrink-0 rounded-l-full border-2 py-2 pr-2 pl-4
 	       hover:border-blue-500 hover:text-blue-500"
@@ -34,11 +33,11 @@
 			</svg>
 		</button>
 		<div class="min-w-0 flex-1 border-y-2 px-2 py-2 text-center font-bold">
-			{count}
+			{product.count}
 		</div>
 
 		<button
-			onclick={() => count++}
+			onclick={() => product.increment()}
 			aria-label="Increase quantity"
 			class="group shrink-0 rounded-r-full border-2 py-2 pr-4 pl-2
 	       hover:border-blue-500 hover:text-blue-500"

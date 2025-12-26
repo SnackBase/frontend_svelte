@@ -7,6 +7,7 @@
 	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { SignIn, SignOut } from '@auth/sveltekit/components';
 	import ButtonStyle from '$lib/styles/ButtonStyle.svelte';
+	import { cartStore } from '$lib/stores/cartStore.svelte';
 
 	let { children, data } = $props();
 </script>
@@ -37,8 +38,25 @@
 			{/if}
 
 			<!-- <TextButton handler={signIn}>Log In</TextButton> -->
-			<div class="flex space-x-2">
+			<div class="flex items-center space-x-2">
 				{#if data.session?.user?.email}
+					<!-- Shopping Cart Icon with Badge -->
+					<a href="/app/customer/cart" class="relative p-2 hover:text-blue-500 transition-colors">
+						<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+							<path
+								fill="currentColor"
+								d="M7 22q-.825 0-1.412-.587T5 20t.588-1.412T7 18t1.413.588T9 20t-.587 1.413T7 22m10 0q-.825 0-1.412-.587T15 20t.588-1.412T17 18t1.413.588T19 20t-.587 1.413T17 22M6.15 6l2.4 5h7l2.75-5zM5.2 4h14.75q.575 0 .875.513t.025 1.037l-3.55 6.4q-.275.5-.737.775T15.55 13H8.1L7 15h12v2H7q-1.125 0-1.7-.987t-.05-1.963L6.6 11.6L3 4H1V2h3.25z"
+							/>
+						</svg>
+						{#if cartStore.totalItems > 0}
+							<span
+								class="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-500 px-1 text-xs font-bold text-white"
+							>
+								{cartStore.totalItems}
+							</span>
+						{/if}
+					</a>
+
 					<TextButton handler={() => signOut()}
 						><div class="flex gap-2">
 							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
