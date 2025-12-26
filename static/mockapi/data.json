@@ -5,7 +5,8 @@
         "price": 0.70,
         "type": "drink",
         "currency": "Euro",
-        "currencySymbol": "€"
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
     },
     {
         "id": 2,
@@ -13,7 +14,8 @@
         "price": 0.70,
         "type": "drink",
         "currency": "Euro",
-        "currencySymbol": "€"
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
     },
     {
         "id": 3,
@@ -21,6 +23,160 @@
         "price": 0.40,
         "type": "snack",
         "currency": "Euro",
-        "currencySymbol": "€"
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 4,
+        "name": "Fanta Orange 0,33 L",
+        "price": 0.70,
+        "type": "drink",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 5,
+        "name": "Sprite 0,33 L",
+        "price": 0.70,
+        "type": "drink",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 6,
+        "name": "Mineral Water Still 0,5 L",
+        "price": 0.50,
+        "type": "drink",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 7,
+        "name": "Mineral Water Sparkling 0,5 L",
+        "price": 0.50,
+        "type": "drink",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 8,
+        "name": "Iced Tea Peach 0,33 L",
+        "price": 0.80,
+        "type": "drink",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 9,
+        "name": "Iced Tea Lemon 0,33 L",
+        "price": 0.80,
+        "type": "drink",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 10,
+        "name": "Energy Drink 0,25 L",
+        "price": 1.20,
+        "type": "drink",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 11,
+        "name": "Potato Chips Classic",
+        "price": 0.90,
+        "type": "snack",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 12,
+        "name": "Potato Chips Paprika",
+        "price": 0.90,
+        "type": "snack",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 13,
+        "name": "Salted Peanuts",
+        "price": 0.60,
+        "type": "snack",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 14,
+        "name": "Chocolate Bar Milk",
+        "price": 0.50,
+        "type": "snack",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 15,
+        "name": "Chocolate Bar Dark",
+        "price": 0.50,
+        "type": "snack",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 16,
+        "name": "Gummy Bears",
+        "price": 0.45,
+        "type": "snack",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 17,
+        "name": "Cookies Chocolate Chip",
+        "price": 0.75,
+        "type": "snack",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 18,
+        "name": "Protein Bar Vanilla",
+        "price": 1.30,
+        "type": "snack",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 19,
+        "name": "Protein Bar Chocolate",
+        "price": 1.30,
+        "type": "snack",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
+    },
+    {
+        "id": 20,
+        "name": "Apple Juice 0,33 L",
+        "price": 0.75,
+        "type": "drink",
+        "currency": "Euro",
+        "currencySymbol": "€",
+        "image": "/favicon.svg"
     }
 ]
