@@ -2,7 +2,6 @@
 	import type { PageProps } from './$types';
 	import { cartStore } from '$lib/stores/cartStore.svelte';
 	import { Product } from '$lib/types/product.svelte';
-	import { CurrencyFormatter } from '$lib/utils/CurrencyFormatter';
 	import { enhance } from '$app/forms';
 
 	let { data }: PageProps = $props();
@@ -62,10 +61,10 @@
 
 				<div class="flex flex-col justify-between text-right">
 					<div class="text-sm text-gray-500">
-						{product.count} × {CurrencyFormatter.format(product.price)}
+						{product.count} × {product.getFormattedPrice()}
 					</div>
 					<div class="font-bold">
-						{CurrencyFormatter.format(product.count * product.price)}
+						{product.getFormattedTotal()}
 					</div>
 				</div>
 			</div>
@@ -89,7 +88,7 @@
 			<!-- Total -->
 			<div class="flex items-center justify-between text-xl font-bold">
 				<span>Total:</span>
-				<span>{CurrencyFormatter.format(cartStore.totalPrice)}</span>
+				<span>{cartStore.formattedTotalPrice}</span>
 			</div>
 
 			<!-- Error Message -->

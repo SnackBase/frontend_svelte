@@ -33,6 +33,8 @@
 			{#if data.session?.user?.email}
 				<nav class="flex gap-2 sm:gap-3 lg:gap-4">
 					<NavBarPageLink name="Shop" route="app/customer/shop" />
+					<!-- TODO: Add Authorization: Admin pages should be accessable only by authorized users! -->
+					<NavBarPageLink name="Admin" route="app/admin" />
 				</nav>
 			{/if}
 
@@ -111,8 +113,8 @@
 	</header>
 
 	<!-- MAIN CONTENT (GROWS) -->
-	<main class="w-full flex-1 py-4">
-		<div class="mx-auto max-w-4xl rounded-2xl px-4 py-6">
+	<main class="flex w-full flex-1 flex-col py-4">
+		<div class="mx-auto flex h-full max-w-4xl flex-col rounded-2xl px-4 py-6">
 			{@render children()}
 		</div>
 	</main>

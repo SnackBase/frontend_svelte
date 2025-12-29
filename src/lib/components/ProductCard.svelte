@@ -1,13 +1,12 @@
 <script lang="ts">
 	import type { Product } from '$lib/types/product.svelte';
-	import { CurrencyFormatter } from '$lib/utils/CurrencyFormatter';
 
 	let { product }: { product: Product } = $props();
 </script>
 
 <div
 	class="max-w-sm space-y-1 rounded-xl border p-4"
-	title="{product.name} - {CurrencyFormatter.format(product.price)}"
+	title="{product.name} - {product.getFormattedPrice()}"
 >
 	<img
 		src={product.image}
@@ -18,7 +17,7 @@
 	<div class="truncate text-xl font-bold">{product.name}</div>
 
 	<div>
-		{CurrencyFormatter.format(product.price)}
+		{product.getFormattedPrice()}
 	</div>
 
 	<div class="flex w-full overflow-hidden">
