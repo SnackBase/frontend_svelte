@@ -6,7 +6,6 @@ export class Product {
 	price: number;
 	type: string;
 	currency: string;
-	currencySymbol: string;
 	image: string;
 	count = $state(0);
 
@@ -24,17 +23,12 @@ export class Product {
 		this.price = data.price;
 		this.type = data.type;
 		this.currency = data.currency;
-		this.currencySymbol = data.currencySymbol;
 		this.image = data.image;
 	}
 
 	// Get currency config based on currency name or symbol
 	getCurrencyConfig(): CurrencyConfig {
-		return (
-			CURRENCIES.find(
-				(c) => c.name === this.currency || c.symbol === this.currencySymbol
-			) || CURRENCIES[0]
-		);
+		return CURRENCIES.find((c) => c.code === this.currency) || CURRENCIES[0];
 	}
 
 	// Format price with currency

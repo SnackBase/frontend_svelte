@@ -7,7 +7,6 @@ interface ProductData {
 	price: number;
 	type: string;
 	currency: string;
-	currencySymbol: string;
 	image: string;
 }
 
@@ -25,7 +24,6 @@ function isValidProductData(data: unknown): data is ProductData[] {
 			typeof item.price === 'number' &&
 			typeof item.type === 'string' &&
 			typeof item.currency === 'string' &&
-			typeof item.currencySymbol === 'string' &&
 			typeof item.image === 'string'
 	);
 }

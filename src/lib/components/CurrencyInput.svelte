@@ -51,8 +51,5 @@
 			</select>
 		{/if}
 	</div>
-	<input type="hidden" name="{name}_numeric" {value} />
-	<input type="hidden" name="{name}_currency" value={selectedCurrency.name} />
-	<input type="hidden" name="{name}_currencySymbol" value={selectedCurrency.symbol} />
-	<input type="hidden" name="{name}_currencyCode" value={selectedCurrency.code} />
+	<input type="hidden" name="currency" value={selectedCurrency.code} />
 </div>
