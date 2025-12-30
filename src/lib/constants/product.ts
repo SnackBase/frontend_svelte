@@ -1,3 +1,5 @@
+import type { ProductData } from '$lib/types/productData.svelte';
+
 // Product type enum
 export enum ProductType {
 	DRINK = 'drink',
@@ -37,6 +39,11 @@ export const CURRENCIES: CurrencyConfig[] = [
 	}
 ];
 
+// Helper to get currency config by code
+export const getCurrencyConfig = (code: string): CurrencyConfig => {
+	return CURRENCIES.find((c) => c.code === code) || CURRENCIES[0];
+};
+
 // Helper to format currency
 export function formatCurrency(amount: number, currencyConfig: CurrencyConfig): string {
 	return new Intl.NumberFormat(currencyConfig.locale, {
@@ -44,6 +51,12 @@ export function formatCurrency(amount: number, currencyConfig: CurrencyConfig): 
 		currency: currencyConfig.code
 	}).format(amount);
 }
+
+// Helper function to format price of product
+export const formatProductPrice = (product: ProductData) => {
+	const currencyConfig = getCurrencyConfig(product.currency);
+	return formatCurrency(product.price, currencyConfig);
+};
 
 // Helper to parse currency input (handles both . and , as decimal separator)
 export function parseCurrencyInput(value: string): number {

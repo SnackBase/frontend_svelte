@@ -1,4 +1,5 @@
-import { CURRENCIES, formatCurrency, type CurrencyConfig } from '$lib/constants/product';
+import { getCurrencyConfig, formatCurrency, type CurrencyConfig } from '$lib/constants/product';
+import type { ProductData } from './productData.svelte';
 
 export class Product {
 	id: number;
@@ -9,15 +10,7 @@ export class Product {
 	image: string;
 	count = $state(0);
 
-	constructor(data: {
-		id: number;
-		name: string;
-		price: number;
-		type: string;
-		currency: string;
-		currencySymbol: string;
-		image: string;
-	}) {
+	constructor(data: ProductData) {
 		this.id = data.id;
 		this.name = data.name;
 		this.price = data.price;
@@ -28,7 +21,7 @@ export class Product {
 
 	// Get currency config based on currency name or symbol
 	getCurrencyConfig(): CurrencyConfig {
-		return CURRENCIES.find((c) => c.code === this.currency) || CURRENCIES[0];
+		return getCurrencyConfig(this.currency);
 	}
 
 	// Format price with currency

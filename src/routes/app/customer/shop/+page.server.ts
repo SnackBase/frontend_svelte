@@ -1,14 +1,6 @@
+import type { ProductData } from '$lib/types/productData.svelte';
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
-
-interface ProductData {
-	id: number;
-	name: string;
-	price: number;
-	type: string;
-	currency: string;
-	image: string;
-}
 
 function isValidProductData(data: unknown): data is ProductData[] {
 	if (!Array.isArray(data)) {
