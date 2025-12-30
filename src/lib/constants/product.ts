@@ -64,3 +64,7 @@ export function parseCurrencyInput(value: string): number {
 	const normalized = value.replace(',', '.');
 	return parseFloat(normalized) || 0;
 }
+
+// Allowed image MIME types for product images
+export const ALLOWED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
+export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB

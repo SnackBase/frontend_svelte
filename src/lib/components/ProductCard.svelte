@@ -11,7 +11,7 @@
 	<img
 		src={product.image}
 		alt={product.name}
-		class="h-32 w-full rounded-2xl bg-white object-cover"
+		class="h-32 w-full rounded-2xl bg-white object-contain"
 	/>
 
 	<div class="truncate text-xl font-bold">{product.name}</div>

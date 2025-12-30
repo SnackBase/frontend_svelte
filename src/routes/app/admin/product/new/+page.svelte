@@ -3,19 +3,12 @@
 	import FormField from '$lib/components/FormField.svelte';
 	import FormSelect from '$lib/components/FormSelect.svelte';
 	import CurrencyInput from '$lib/components/CurrencyInput.svelte';
-	import {
-		formatCurrency,
-		formatProductPrice,
-		getCurrencyConfig,
-		PRODUCT_TYPES
-	} from '$lib/constants/product';
+	import FileUpload from '$lib/components/FileUpload.svelte';
+	import { formatProductPrice, PRODUCT_TYPES, ALLOWED_IMAGE_TYPES } from '$lib/constants/product';
 	import type { PageData } from './$types';
 	import { capitalizeFirstLetter } from '$lib/utils/capitalize';
 	import ButtonStyle from '$lib/styles/ButtonStyle.svelte';
-	import ProductCard from '$lib/components/ProductCard.svelte';
-	import { Product } from '$lib/types/product.svelte';
 	import type { CreateProductResponse } from './+page.server';
-	import type { ProductData } from '$lib/types/productData.svelte';
 
 	let { data, form }: { data: PageData; form: CreateProductResponse } = $props();
 
@@ -44,7 +37,7 @@
 			<img
 				src={form?.product?.image}
 				alt={form?.product?.name}
-				class="h-32 max-w-64 rounded-2xl bg-white object-cover"
+				class="h-32 max-w-64 rounded-2xl bg-white object-contain"
 			/>
 			<div class="flex flex-col">
 				<div class="max-w-64 truncate text-xl font-bold sm:max-w-sm">{form?.product?.name}</div>
@@ -76,7 +69,7 @@
 			</div>
 		{/if}
 
-		<form method="POST" class="flex flex-col gap-4">
+		<form method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
 			<FormField id="name" name="name" label="Product Name" placeholder="Cola 0,33 L" required />
 
 			<CurrencyInput
@@ -97,12 +90,11 @@
 				required
 			/>
 
-			<FormField
+			<FileUpload
 				id="image"
 				name="image"
-				label="Image URL"
-				type="url"
-				placeholder="http://website.abc/image.png"
+				label="Product Image"
+				accept={ALLOWED_IMAGE_TYPES.join(',')}
 				required
 			/>
 

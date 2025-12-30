@@ -1,6 +1,12 @@
 import { Product } from '$lib/types/product.svelte';
 import type { ProductData } from '$lib/types/productData.svelte';
-import { parseCurrencyInput, PRODUCT_TYPES, CURRENCIES } from '$lib/constants/product';
+import {
+	parseCurrencyInput,
+	PRODUCT_TYPES,
+	CURRENCIES,
+	ALLOWED_IMAGE_TYPES,
+	MAX_FILE_SIZE
+} from '$lib/constants/product';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
@@ -25,7 +31,38 @@ export const actions = {
 		if (!price) return fail(400, { missing: true, details: 'Price is required.' });
 		if (!type) return fail(400, { missing: true, details: 'Product type is required.' });
 		if (!currency) return fail(400, { missing: true, details: 'Currency is required.' });
-		if (!image) return fail(400, { missing: true, details: 'Image URL is required.' });
+		if (!image) return fail(400, { missing: true, details: 'Product image is required.' });
+
+		// Validate image is a File object and not empty
+		if (!(image instanceof File)) {
+			return fail(422, {
+				missing: true,
+				details: 'Invalid image file. Please select an image file.'
+			});
+		}
+
+		if (image.size === 0) {
+			return fail(422, {
+				missing: true,
+				details: 'Product image is required. Please select a file.'
+			});
+		}
+
+		// Validate image file type
+		if (!ALLOWED_IMAGE_TYPES.includes(image.type)) {
+			return fail(422, {
+				missing: true,
+				details: `Invalid image type. Allowed types: PNG, JPEG, JPG`
+			});
+		}
+
+		// Validate image file size
+		if (image.size > MAX_FILE_SIZE) {
+			return fail(422, {
+				missing: true,
+				details: `Image file is too large. Maximum size is ${MAX_FILE_SIZE / 1024 / 1024}MB.`
+			});
+		}
 
 		// Validate product type against enum
 		if (!PRODUCT_TYPES.includes(type.toString() as any)) {
@@ -43,16 +80,6 @@ export const actions = {
 			});
 		}
 
-		// Validate image URL format
-		try {
-			new URL(image.toString());
-		} catch {
-			return fail(422, {
-				missing: true,
-				details: 'Image URL must be a valid URL.'
-			});
-		}
-
 		// Parse and validate price (handles both comma and dot as decimal separator)
 		const parsedPrice = parseCurrencyInput(price.toString());
 		if (parsedPrice <= 0) {
@@ -62,13 +89,19 @@ export const actions = {
 			});
 		}
 
+		// TODO: Upload image file to backend storage
+		// For now, use a dummy image URL
+		// In production, this would be:
+		// const imageUrl = await uploadImageToBackend(image);
+		const imageUrl = '/product.png';
+
 		let product: ProductData = {
 			id: 0, //TODO: replace with backend api request to get real id
 			name: name.toString(),
 			price: parsedPrice,
 			type: type.toString(),
 			currency: currency.toString(),
-			image: image.toString()
+			image: imageUrl
 		};
 
 		return { success: true, product: product } satisfies CreateProductResponse;
