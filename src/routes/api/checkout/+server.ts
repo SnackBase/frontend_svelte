@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { getAuthSession, requireAnyScope } from '$lib/server/auth-utils';
 
 interface CheckoutItem {
 	productId: number;
@@ -10,9 +11,13 @@ interface CheckoutRequest {
 	items: CheckoutItem[];
 }
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async (event) => {
+	// Require either customer OR kiosk scope
+	const session = await getAuthSession(event);
+	requireAnyScope(session, ['customer', 'kiosk']);
+
 	try {
-		const body = (await request.json()) as CheckoutRequest;
+		const body = (await event.request.json()) as CheckoutRequest;
 
 		// Validate request body
 		if (!body.items || !Array.isArray(body.items)) {

@@ -1,6 +1,7 @@
 import type { ProductData } from '$lib/types/productData.svelte';
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
+import { getAuthSession, requireScope } from '$lib/server/auth-utils';
 
 function isValidProductData(data: unknown): data is ProductData[] {
 	if (!Array.isArray(data)) {
@@ -20,7 +21,12 @@ function isValidProductData(data: unknown): data is ProductData[] {
 	);
 }
 
-export const load = (async ({ fetch }) => {
+export const load = (async (event) => {
+	// Verify the user has customer scope
+	const session = await getAuthSession(event);
+	requireScope(session, 'customer');
+
+	const { fetch } = event;
 	try {
 		const product_data = await Promise.all([
 			// artificial delay TODO: delete
