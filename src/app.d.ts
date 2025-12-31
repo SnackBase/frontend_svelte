@@ -1,12 +1,18 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
-import type { ExtendedSession } from '$lib/server/auth-utils';
-
 declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			auth: () => Promise<ExtendedSession | null>;
+			auth: () => Promise<{
+				user?: {
+					name?: string | null;
+					email?: string | null;
+					image?: string | null;
+				};
+				accessToken?: string;
+				scopes?: string[];
+			} | null>;
 		}
 		// interface PageData {}
 		// interface PageState {}
