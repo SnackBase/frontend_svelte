@@ -7,13 +7,9 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 		Keycloak({
 			clientId: process.env.AUTH_KEYCLOAK_ID!,
 			clientSecret: process.env.AUTH_KEYCLOAK_SECRET!,
-			issuer: process.env.AUTH_KEYCLOAK_ISSUER!,
-			// Request all scopes - Keycloak will only include those the user is authorized for
-			authorization: {
-				params: {
-					scope: 'openid email profile customer appadmin kiosk'
-				}
-			}
+			issuer: process.env.AUTH_KEYCLOAK_ISSUER!
+			// Note: Scopes are automatically included by Keycloak based on client configuration
+			// and user roles/groups. No need to explicitly request them here.
 		}) as Provider
 	],
 	callbacks: {

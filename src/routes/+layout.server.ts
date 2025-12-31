@@ -1,10 +1,42 @@
-import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
+import type { ExtendedSession } from '$lib/server/auth-utils';
+import { checkRouteIfAuthorized, hasScope } from '$lib/server/auth-utils';
+
+interface NavBarLink {
+	name: string;
+	route: string;
+}
 
 export const load: LayoutServerLoad = async (event) => {
-	const session = await event.locals.auth();
+	const session = (await event.locals.auth()) as ExtendedSession | null;
+
+	// Define all possible navbar links with their required scopes
+	const navbarLinks: NavBarLink[] = [];
+
+	if (session?.user?.email) {
+		// Shop link - requires 'customer' scope
+		if (checkRouteIfAuthorized({ url: '/app/customer/shop', session: session })) {
+			navbarLinks.push({ name: 'Shop', route: 'app/customer/shop' });
+		}
+
+		// Admin link - requires 'appadmin' scope
+		if (checkRouteIfAuthorized({ url: '/app/admin', session: session })) {
+			navbarLinks.push({ name: 'Admin', route: 'app/admin' });
+		}
+
+		// Add more links here as needed
+		// if (checkRouteIfAuthorized({ url: '/app/kiosk', session: session })) {
+		// 	navbarLinks.push({ name: 'Kiosk', route: 'app/kiosk' });
+		// }
+	}
 
 	return {
-		session
+		session: session
+			? {
+					user: session.user,
+					scopes: session.scopes
+				}
+			: null,
+		navbarLinks
 	};
 };

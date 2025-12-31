@@ -25,14 +25,14 @@ export function hasScope(session: ExtendedSession | null, scope: string): boolea
  * Check if the user has ANY of the provided scopes
  */
 export function hasAnyScope(session: ExtendedSession | null, scopes: string[]): boolean {
-	return scopes.some(scope => hasScope(session, scope));
+	return scopes.some((scope) => hasScope(session, scope));
 }
 
 /**
  * Check if the user has ALL of the provided scopes
  */
 export function hasAllScopes(session: ExtendedSession | null, scopes: string[]): boolean {
-	return scopes.every(scope => hasScope(session, scope));
+	return scopes.every((scope) => hasScope(session, scope));
 }
 
 /**
@@ -63,3 +63,34 @@ export function requireAnyScope(session: ExtendedSession | null, scopes: string[
 export async function getAuthSession(event: RequestEvent): Promise<ExtendedSession | null> {
 	return (await event.locals.auth()) as ExtendedSession | null;
 }
+
+/**
+ * Check if a user is allowed to access a given route based on the current session
+ */
+export const checkRouteIfAuthorized = ({
+	url,
+	session
+}: {
+	url: URL | string;
+	session: ExtendedSession;
+}): boolean => {
+	// Convert string to pathname if needed
+	const pathname = typeof url === 'string' ? url : url.pathname;
+
+	// Define protected routes and their required scopes
+	const protectedRoutes = [
+		{ pattern: /^\/app\/customer/, scope: 'customer' },
+		{ pattern: /^\/app\/admin/, scope: 'appadmin' },
+		{ pattern: /^\/app\/kiosk/, scope: 'kiosk' }
+	];
+
+	// Check if current route needs protection
+	for (const { pattern, scope } of protectedRoutes) {
+		if (pattern.test(pathname)) {
+			if (!hasScope(session, scope)) {
+				return false;
+			}
+		}
+	}
+	return true;
+};
