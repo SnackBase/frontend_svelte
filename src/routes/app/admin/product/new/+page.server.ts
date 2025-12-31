@@ -9,6 +9,7 @@ import {
 } from '$lib/constants/product';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
+import { getAuthSession, requireScope } from '$lib/server/auth-utils';
 
 export interface CreateProductResponse {
 	success?: boolean;
@@ -18,8 +19,12 @@ export interface CreateProductResponse {
 }
 
 export const actions = {
-	default: async ({ request }) => {
-		const data = await request.formData();
+	default: async (event) => {
+		// Verify admin scope BEFORE processing form
+		const session = await getAuthSession(event);
+		requireScope(session, 'appadmin');
+
+		const data = await event.request.formData();
 		const name = data.get('name');
 		const price = data.get('price');
 		const type = data.get('type');

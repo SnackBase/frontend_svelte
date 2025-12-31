@@ -2,11 +2,8 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import person from '$lib/assets/person.svg';
-	import TextButton from '$lib/components/TextButton.svelte';
 	import NavBarPageLink from '$lib/components/NavBarPageLink.svelte';
 	import { signIn, signOut } from '@auth/sveltekit/client';
-	import { SignIn, SignOut } from '@auth/sveltekit/components';
-	import ButtonStyle from '$lib/styles/ButtonStyle.svelte';
 	import { cartStore } from '$lib/stores/cartStore.svelte';
 
 	let { children, data } = $props();
@@ -30,11 +27,11 @@
 				<h1 class="hidden text-xl font-semibold sm:block">DrinkBar</h1>
 			</a>
 
-			{#if data.session?.user?.email}
+			{#if data.navbarLinks && data.navbarLinks.length > 0}
 				<nav class="flex gap-2 sm:gap-3 lg:gap-4">
-					<NavBarPageLink name="Shop" route="app/customer/shop" />
-					<!-- TODO: Add Authorization: Admin pages should be accessable only by authorized users! -->
-					<NavBarPageLink name="Admin" route="app/admin" />
+					{#each data.navbarLinks as link}
+						<NavBarPageLink name={link.name} route={link.route} />
+					{/each}
 				</nav>
 			{/if}
 
