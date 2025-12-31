@@ -59,7 +59,7 @@
 					</a>
 
 					<button
-						onclick={() => signOut()}
+						onclick={() => signOut({ callbackUrl: '/', redirect: true })}
 						class="w-max-1 flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-white p-2 transition-colors hover:bg-gray-100 sm:size-full sm:w-auto sm:gap-2 sm:px-4 dark:hover:bg-gray-800"
 						aria-label="Log Out"
 					>
@@ -77,14 +77,9 @@
 						</svg>
 						<div class="hidden sm:block">Log Out</div>
 					</button>
-					<img
-						src={data.session?.user?.image ?? person}
-						alt="User Avatar"
-						class="hidden size-10 shrink-0 rounded-full ring-2 outline -outline-offset-1 outline-white/10 sm:inline-block"
-					/>
 				{:else}
 					<button
-						onclick={() => signIn()}
+						onclick={() => signIn('keycloak')}
 						class="flex size-10 shrink-0 items-center justify-center rounded-full p-2 transition-colors hover:bg-gray-100 sm:w-auto sm:gap-2 sm:rounded-lg sm:px-4 dark:hover:bg-gray-800"
 						aria-label="Log In"
 					>
