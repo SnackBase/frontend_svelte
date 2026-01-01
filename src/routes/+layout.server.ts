@@ -1,6 +1,6 @@
 import type { LayoutServerLoad } from './$types';
 import type { ExtendedSession } from '$lib/server/auth-utils';
-import { checkRouteIfAuthorized, hasScope } from '$lib/server/auth-utils';
+import { checkRouteIfAuthorized, hasAnyScope } from '$lib/server/auth-utils';
 
 interface NavBarLink {
 	name: string;
@@ -30,6 +30,11 @@ export const load: LayoutServerLoad = async (event) => {
 		// }
 	}
 
+	// Shopping cart is visible for customer and kiosk users
+	const showShoppingCart = session?.user?.email
+		? hasAnyScope(session, ['customer', 'kiosk'])
+		: false;
+
 	return {
 		session: session
 			? {
@@ -37,6 +42,7 @@ export const load: LayoutServerLoad = async (event) => {
 					scopes: session.scopes
 				}
 			: null,
-		navbarLinks
+		navbarLinks,
+		showShoppingCart
 	};
 };

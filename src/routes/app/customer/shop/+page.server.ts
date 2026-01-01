@@ -30,7 +30,7 @@ export const load = (async (event) => {
 	try {
 		const product_data = await Promise.all([
 			// artificial delay TODO: delete
-			new Promise((resolve) => setTimeout(resolve, 1_000)),
+			new Promise((resolve) => setTimeout(resolve, 2_000)),
 
 			// data fetch
 			fetch('http://localhost:5173/mockapi/data.json')

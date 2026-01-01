@@ -12,6 +12,10 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 			// and user roles/groups. No need to explicitly request them here.
 		}) as Provider
 	],
+	pages: {
+		// Redirect to root page after sign in, which will handle role-based routing
+		signIn: '/'
+	},
 	callbacks: {
 		// Extract access token and scopes from the account object
 		async jwt({ token, account }) {

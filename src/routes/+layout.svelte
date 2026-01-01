@@ -21,22 +21,33 @@
 <div class="flex min-h-screen flex-col font-sans dark:bg-gray-950 dark:text-white">
 	<!-- HEADER -->
 	<header class="w-full">
-		<div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4">
-			<a href="/" class="flex shrink-0 items-center gap-2 sm:gap-4">
-				<img src="/favicon.ico" width="40" alt="Logo" class="dark:invert" />
+		<div class="mx-auto grid h-16 max-w-7xl grid-cols-3 items-center gap-2 px-4 sm:gap-4">
+			<!-- Left Section: Logo -->
+			<a href="/" class="flex shrink-0 items-center gap-2 hover:text-blue-500 sm:gap-4">
+				<!-- <img src="/favicon.ico" width="40" alt="Logo" class="hover:fill-blue-500 dark:invert" /> -->
+				<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
+					<path
+						fill="currentColor"
+						d="M7 21q-1.25 0-2.125-.875T4 18H3q-.825 0-1.412-.587T1 16v-3q0-.825.588-1.412T3 11h9V7q0-.825.588-1.412T14 5h2V4q0-.425.288-.712T17 3h1q.425 0 .713.288T19 4v1h.55q.65 0 1.175.375t.725 1l1.45 4.3q.05.15.075.313t.025.337V16q0 .825-.587 1.413T21 18h-1q0 1.25-.875 2.125T17 21t-2.125-.875T14 18h-4q0 1.25-.875 2.125T7 21m0-2q.425 0 .713-.288T8 18t-.288-.712T7 17t-.712.288T6 18t.288.713T7 19m10 0q.425 0 .713-.288T18 18t-.288-.712T17 17t-.712.288T16 18t.288.713T17 19m-3-8h6.9l-1.35-4H14zM2 8.5v-2h-.25q-.325 0-.537-.213T1 5.75t.213-.537T1.75 5h8.5q.325 0 .538.213T11 5.75t-.213.538t-.537.212H10v2h.25q.325 0 .538.213T11 9.25t-.213.538t-.537.212h-8.5q-.325 0-.537-.213T1 9.25t.213-.537t.537-.213zm1.5 0h1.75v-2H3.5zm3.25 0H8.5v-2H6.75z"
+					/>
+				</svg>
 				<h1 class="hidden text-xl font-semibold sm:block">DrinkBar</h1>
 			</a>
 
+			<!-- Center Section: Navigation Links -->
 			{#if data.navbarLinks && data.navbarLinks.length > 0}
-				<nav class="flex gap-2 sm:gap-3 lg:gap-4">
+				<nav class="flex justify-center gap-2 sm:gap-3 lg:gap-4">
 					{#each data.navbarLinks as link}
 						<NavBarPageLink name={link.name} route={link.route} />
 					{/each}
 				</nav>
+			{:else}
+				<div></div>
 			{/if}
 
-			<div class="flex shrink-0 items-center gap-1 sm:gap-2">
-				{#if data.session?.user?.email}
+			<!-- Right Section: Cart and Auth -->
+			<div class="flex shrink-0 items-center justify-end gap-1 sm:gap-2">
+				{#if data.showShoppingCart}
 					<!-- Shopping Cart Icon with Badge -->
 					<a
 						href="/app/customer/cart"
@@ -57,10 +68,12 @@
 							</span>
 						{/if}
 					</a>
+				{/if}
 
+				{#if data.session?.user?.email}
 					<button
 						onclick={() => signOut({ callbackUrl: '/', redirect: true })}
-						class="w-max-1 flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-white p-2 transition-colors hover:bg-gray-100 sm:size-full sm:w-auto sm:gap-2 sm:px-4 dark:hover:bg-gray-800"
+						class="w-max-1 flex size-10 shrink-0 items-center justify-center rounded-full p-2 transition-colors hover:text-blue-500 sm:size-full sm:w-auto sm:gap-2 sm:px-4"
 						aria-label="Log Out"
 					>
 						<svg
@@ -75,12 +88,12 @@
 								d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"
 							/>
 						</svg>
-						<div class="hidden sm:block">Log Out</div>
+						<!-- <div class="hidden sm:block">Log Out</div> -->
 					</button>
 				{:else}
 					<button
 						onclick={() => signIn('keycloak')}
-						class="flex size-10 shrink-0 items-center justify-center rounded-full p-2 transition-colors hover:bg-gray-100 sm:w-auto sm:gap-2 sm:rounded-lg sm:px-4 dark:hover:bg-gray-800"
+						class="flex size-10 shrink-0 items-center justify-center rounded-full p-2 transition-colors hover:text-blue-500 sm:w-auto sm:gap-2 sm:rounded-full sm:px-4"
 						aria-label="Log In"
 					>
 						<svg
@@ -95,7 +108,7 @@
 								d="M12 21v-2h7V5h-7V3h7q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm-2-4l-1.375-1.45l2.55-2.55H3v-2h8.175l-2.55-2.55L10 7l5 5z"
 							/>
 						</svg>
-						<div class="hidden sm:block">Log In</div>
+						<!-- <div class="hidden sm:block">Log In</div> -->
 					</button>
 				{/if}
 			</div>
