@@ -24,16 +24,24 @@ export const load: LayoutServerLoad = async (event) => {
 			navbarLinks.push({ name: 'Admin', route: 'app/admin' });
 		}
 
-		// Add more links here as needed
-		// if (checkRouteIfAuthorized({ url: '/app/kiosk', session: session })) {
-		// 	navbarLinks.push({ name: 'Kiosk', route: 'app/kiosk' });
-		// }
+		// Kiosk link - requires 'kiosk' scope
+		if (checkRouteIfAuthorized({ url: '/app/kiosk/shop', session: session })) {
+			navbarLinks.push({ name: 'Kiosk', route: 'app/kiosk/shop' });
+		}
 	}
 
 	// Shopping cart is visible for customer and kiosk users
 	const showShoppingCart = session?.user?.email
 		? hasAnyScope(session, ['customer', 'kiosk'])
 		: false;
+
+	// Determine cart URL based on user scope
+	let cartUrl = '/app/customer/cart'; // default
+	if (session?.scopes?.includes('kiosk')) {
+		cartUrl = '/app/kiosk/cart';
+	} else if (session?.scopes?.includes('customer')) {
+		cartUrl = '/app/customer/cart';
+	}
 
 	return {
 		session: session
@@ -43,6 +51,7 @@ export const load: LayoutServerLoad = async (event) => {
 				}
 			: null,
 		navbarLinks,
-		showShoppingCart
+		showShoppingCart,
+		cartUrl
 	};
 };

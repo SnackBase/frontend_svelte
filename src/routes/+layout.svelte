@@ -50,7 +50,7 @@
 				{#if data.showShoppingCart}
 					<!-- Shopping Cart Icon with Badge -->
 					<a
-						href="/app/customer/cart"
+						href={data.cartUrl}
 						class="relative p-2 transition-colors hover:text-blue-500"
 						aria-label="Shopping Cart"
 					>

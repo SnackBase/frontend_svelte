@@ -36,6 +36,12 @@ class CartStore {
 		this.products = rawProducts.map((p) => new Product(p));
 		this.isLoaded = true;
 	}
+
+	clearCart(): void {
+		this.products.forEach((product) => {
+			product.count = 0;
+		});
+	}
 }
 
 export const cartStore = new CartStore();
