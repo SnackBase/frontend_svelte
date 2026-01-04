@@ -43,4 +43,16 @@ export class Product {
 			this.count--;
 		}
 	}
+
+	// Get the proxied image URL for authenticated image requests
+	getProxiedImageUrl(): string {
+		// If the image URL is already a full URL (e.g., starts with http/https),
+		// we need to extract just the path portion for the proxy
+		// Otherwise, use it as-is
+		const imagePath = this.image.startsWith('http')
+			? new URL(this.image).pathname.substring(1) // Remove leading slash
+			: this.image;
+
+		return `/api/images/${imagePath}`;
+	}
 }

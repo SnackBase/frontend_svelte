@@ -54,7 +54,11 @@
 
 {#snippet productInCart(product: Product)}
 	<div class="flex gap-3 rounded-2xl border p-3">
-		<img src={product.image} alt={product.name} class="size-18 rounded-2xl bg-white object-cover" />
+		<img
+			src={product.getProxiedImageUrl()}
+			alt={product.name}
+			class="size-18 rounded-2xl bg-white object-cover"
+		/>
 
 		<div class="flex flex-1 flex-col justify-between">
 			<div class="font-semibold">{product.name}</div>

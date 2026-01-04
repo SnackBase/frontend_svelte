@@ -9,7 +9,7 @@
 	title="{product.name} - {product.getFormattedPrice()}"
 >
 	<img
-		src={product.image}
+		src={product.getProxiedImageUrl()}
 		alt={product.name}
 		class="h-32 w-full rounded-2xl bg-white object-contain"
 	/>
