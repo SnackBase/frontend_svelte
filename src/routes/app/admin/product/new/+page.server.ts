@@ -5,7 +5,8 @@ import {
 	PRODUCT_TYPES,
 	CURRENCIES,
 	ALLOWED_IMAGE_TYPES,
-	MAX_FILE_SIZE
+	MAX_FILE_SIZE,
+	PRODUCTS_ENDPOINT
 } from '$lib/constants/product';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
@@ -94,21 +95,43 @@ export const actions = {
 			});
 		}
 
-		// TODO: Upload image file to backend storage
-		// For now, use a dummy image URL
-		// In production, this would be:
-		// const imageUrl = await uploadImageToBackend(image);
-		const imageUrl = '/product.png';
+		// Send product data to FastAPI backend
+		try {
+			// Create FormData to send to backend (includes file upload)
+			const backendFormData = new FormData();
+			backendFormData.append('name', name.toString());
+			backendFormData.append('price', parsedPrice.toString());
+			backendFormData.append('type', type.toString());
+			backendFormData.append('currency', currency.toString());
+			backendFormData.append('image', image); // File object
 
-		let product: ProductData = {
-			id: 0, //TODO: replace with backend api request to get real id
-			name: name.toString(),
-			price: parsedPrice,
-			type: type.toString(),
-			currency: currency.toString(),
-			image: imageUrl
-		};
+			// TODO: Replace with your actual FastAPI backend URL
+			const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000';
 
-		return { success: true, product: product } satisfies CreateProductResponse;
+			const response = await fetch(`${backendUrl}${PRODUCTS_ENDPOINT}`, {
+				method: 'POST',
+				body: backendFormData
+				// Note: Don't set Content-Type header - browser will set it with boundary for multipart/form-data
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({}));
+				console.error('Backend error:', errorData);
+				return fail(response.status, {
+					missing: true,
+					details: errorData.detail || 'Failed to create product on backend'
+				});
+			}
+
+			const product: ProductData = await response.json();
+
+			return { success: true, product } satisfies CreateProductResponse;
+		} catch (error) {
+			console.error('Error creating product:', error);
+			return fail(500, {
+				missing: true,
+				details: 'Failed to connect to backend. Please try again.'
+			});
+		}
 	}
 } satisfies Actions;

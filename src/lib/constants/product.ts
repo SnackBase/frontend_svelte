@@ -1,5 +1,8 @@
 import type { ProductData } from '$lib/types/productData.svelte';
 
+// Backend API Endpoints
+export const PRODUCTS_ENDPOINT = '/products';
+
 // Product type enum
 export enum ProductType {
 	DRINK = 'drink',
