@@ -8,7 +8,7 @@ export const load = (async (event) => {
 	requireScope(session, 'customer');
 
 	// Load products using the shared utility
-	const product_data = loadProducts(event.fetch);
+	const product_data = loadProducts(event.fetch, session?.accessToken);
 
 	return {
 		product_data

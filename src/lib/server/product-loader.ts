@@ -25,15 +25,33 @@ function isValidProductData(data: unknown): data is ProductData[] {
 /**
  * Loads product data from the API
  * This function can be reused across different routes (customer, kiosk, admin, etc.)
+ *
+ * @param fetch - SvelteKit fetch function
+ * @param accessToken - Optional JWT access token for authentication
  */
-export async function loadProducts(fetch: typeof globalThis.fetch): Promise<ProductData[]> {
+export async function loadProducts(
+	fetch: typeof globalThis.fetch,
+	accessToken?: string
+): Promise<ProductData[]> {
 	try {
+		// Prepare headers with optional authentication
+		const headers: HeadersInit = {
+			'Content-Type': 'application/json'
+		};
+
+		if (accessToken) {
+			headers['Authorization'] = `Bearer ${accessToken}`;
+		}
+
 		const product_data = await Promise.all([
 			// artificial delay TODO: delete
 			new Promise((resolve) => setTimeout(resolve, 2_000)),
 
 			// data fetch
-			fetch('http://localhost:5173/mockapi/data.json')
+			// fetch('http://localhost:5173/mockapi/data.json')
+			fetch('http://localhost:8000/api/v1/products', {
+				headers
+			})
 				.then(async (res) => {
 					if (!res.ok) {
 						throw new Error(`Failed to fetch products: ${res.status} ${res.statusText}`);

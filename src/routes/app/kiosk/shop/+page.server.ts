@@ -9,7 +9,7 @@ export const load = (async (event) => {
 
 	// Load products using the same shared utility
 	// The UI component will be identical, but the authentication is different
-	const product_data = loadProducts(event.fetch);
+	const product_data = loadProducts(event.fetch, session?.accessToken);
 
 	return {
 		product_data
