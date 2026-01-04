@@ -2,6 +2,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { getAuthSession, requireScope } from '$lib/server/auth-utils';
 import { fail } from '@sveltejs/kit';
 import { api } from '$lib/server/api-client';
+import { error } from 'console';
 
 // Define the user type for kiosk checkout
 export interface KioskUser {
@@ -34,27 +35,30 @@ async function fetchKioskUsers(accessToken?: string): Promise<KioskUser[]> {
 	// return await response.json();
 
 	const response = await api.get('/users', accessToken);
-	let users_data: KioskUser[] = await response.json();
 
-	console.log(users_data);
+	if (!response.ok) {
+		throw fail(500, { error: 'Error requesting users form auth server' });
+	}
+
+	let users_data: KioskUser[] = await response.json();
 
 	return users_data;
 }
 
 export const actions: Actions = {
-	checkout: async ({ request, locals, fetch }) => {
-		const session = await locals.auth();
+	checkout: async (event) => {
+		const session = await getAuthSession(event);
 		if (!session?.user) {
 			return fail(401, { error: 'Not authenticated' });
 		}
 
-		const formData = await request.formData();
+		const formData = await event.request.formData();
 		const items = formData.get('items');
-		const selectedUserId = formData.get('userId');
+		const selectedUserName = formData.get('userId');
 		const userPassword = formData.get('userPassword');
 
 		// Validate required fields
-		if (!selectedUserId) {
+		if (!selectedUserName) {
 			return fail(400, { error: 'Please select a user for checkout' });
 		}
 
@@ -70,15 +74,13 @@ export const actions: Actions = {
 			const cartItems = JSON.parse(items);
 
 			// Step 1: Authenticate the selected user using Keycloak Direct Access Grant
-			// TODO: Replace with your actual Keycloak configuration
 			const keycloakUrl = process.env.AUTH_KEYCLOAK_ISSUER; // e.g., 'http://localhost:8080/realms/your-realm'
 			const clientId = process.env.AUTH_KEYCLOAK_ID;
 			const clientSecret = process.env.AUTH_KEYCLOAK_SECRET;
 
-			//  TODO: change logic!
 			// Find the user's email/username from the users list
-			const users = await fetchKioskUsers();
-			const selectedUser = users.find((u) => u.username === selectedUserId);
+			const users = await fetchKioskUsers(session.accessToken);
+			const selectedUser = users.find((u) => u.username === selectedUserName);
 
 			if (!selectedUser) {
 				return fail(400, { error: 'Selected user not found' });

@@ -12,7 +12,6 @@ export const GET: RequestHandler = async (event) => {
 
 	// Get the image path from the route parameter
 	const imagePath = event.params.path;
-	console.log(imagePath);
 
 	if (!imagePath) {
 		throw error(400, 'Image path is required');
