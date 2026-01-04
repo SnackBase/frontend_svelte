@@ -19,7 +19,7 @@ export async function apiClient(
 	const { accessToken, headers = {}, ...fetchOptions } = options;
 
 	// Build headers
-	const requestHeaders: HeadersInit = {
+	const requestHeaders: Record<string, any> = {
 		'Content-Type': 'application/json',
 		...headers
 	};

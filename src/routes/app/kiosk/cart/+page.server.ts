@@ -1,12 +1,13 @@
 import type { PageServerLoad, Actions } from './$types';
 import { getAuthSession, requireScope } from '$lib/server/auth-utils';
 import { fail } from '@sveltejs/kit';
+import { api } from '$lib/server/api-client';
 
 // Define the user type for kiosk checkout
 export interface KioskUser {
-	id: string;
-	name: string;
-	email: string;
+	username: string;
+	firstName: string;
+	lastName: string;
 }
 
 export const load: PageServerLoad = async (event) => {
@@ -16,7 +17,7 @@ export const load: PageServerLoad = async (event) => {
 
 	// TODO: Replace with actual backend endpoint to fetch users
 	// For now, return mock data
-	const users: KioskUser[] = await fetchKioskUsers(event.fetch);
+	const users: KioskUser[] = await fetchKioskUsers(session?.accessToken);
 
 	return {
 		users
@@ -27,16 +28,17 @@ export const load: PageServerLoad = async (event) => {
  * Fetch the list of users available for kiosk checkout
  * TODO: Replace this with your actual backend endpoint
  */
-async function fetchKioskUsers(fetch: typeof globalThis.fetch): Promise<KioskUser[]> {
+async function fetchKioskUsers(accessToken?: string): Promise<KioskUser[]> {
 	// Mock implementation - replace with actual API call
 	// Example: const response = await fetch('http://your-backend/api/users');
 	// return await response.json();
 
-	return [
-		{ id: '1', name: 'John Doe', email: 'john@example.com' },
-		{ id: '2', name: 'Jane Smith', email: 'jane@example.com' },
-		{ id: '3', name: 'Bob Johnson', email: 'bob@example.com' }
-	];
+	const response = await api.get('/users', accessToken);
+	let users_data: KioskUser[] = await response.json();
+
+	console.log(users_data);
+
+	return users_data;
 }
 
 export const actions: Actions = {
@@ -73,9 +75,10 @@ export const actions: Actions = {
 			const clientId = process.env.AUTH_KEYCLOAK_ID;
 			const clientSecret = process.env.AUTH_KEYCLOAK_SECRET;
 
+			//  TODO: change logic!
 			// Find the user's email/username from the users list
-			const users = await fetchKioskUsers(fetch);
-			const selectedUser = users.find((u) => u.id === selectedUserId);
+			const users = await fetchKioskUsers();
+			const selectedUser = users.find((u) => u.username === selectedUserId);
 
 			if (!selectedUser) {
 				return fail(400, { error: 'Selected user not found' });
@@ -135,7 +138,7 @@ export const actions: Actions = {
 			return {
 				success: true,
 				orderId,
-				message: `Order placed for ${selectedUser.name}`
+				message: `Order placed for ${selectedUser.firstName}`
 			};
 		} catch (error) {
 			console.error('Checkout error:', error);

@@ -24,8 +24,10 @@
 			>
 				<option value="" disabled>Choose a user...</option>
 				{#each data.users as user}
-					<option value={user.id}>
-						{user.name} ({user.email})
+					<option value={user.username}>
+						{user.firstName}
+						{user.lastName}
+						({user.username})
 					</option>
 				{/each}
 			</select>
@@ -33,9 +35,7 @@
 
 		<!-- Password Field -->
 		<div>
-			<label for="user-password" class="mb-2 block text-sm font-semibold">
-				User Password:
-			</label>
+			<label for="user-password" class="mb-2 block text-sm font-semibold"> User Password: </label>
 			<input
 				id="user-password"
 				name="userPassword"
