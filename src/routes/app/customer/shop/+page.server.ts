@@ -7,8 +7,8 @@ export const load = (async (event) => {
 	const session = await getAuthSession(event);
 	requireScope(session, 'customer');
 
-	// Load products using the shared utility
-	const product_data = loadProducts(event.fetch, session?.accessToken);
+	// Load products using the shared utility with JWT token
+	const product_data = loadProducts(session?.accessToken);
 
 	return {
 		product_data

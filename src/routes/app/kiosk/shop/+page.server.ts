@@ -7,9 +7,9 @@ export const load = (async (event) => {
 	const session = await getAuthSession(event);
 	requireScope(session, 'kiosk');
 
-	// Load products using the same shared utility
+	// Load products using the same shared utility with JWT token
 	// The UI component will be identical, but the authentication is different
-	const product_data = loadProducts(event.fetch, session?.accessToken);
+	const product_data = loadProducts(session?.accessToken);
 
 	return {
 		product_data

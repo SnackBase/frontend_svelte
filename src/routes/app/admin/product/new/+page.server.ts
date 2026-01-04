@@ -11,6 +11,7 @@ import {
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { getAuthSession, requireScope } from '$lib/server/auth-utils';
+import { api } from '$lib/server/api-client';
 
 export interface CreateProductResponse {
 	success?: boolean;
@@ -105,14 +106,8 @@ export const actions = {
 			backendFormData.append('currency', currency.toString());
 			backendFormData.append('image', image); // File object
 
-			// TODO: Replace with your actual FastAPI backend URL
-			const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000';
-
-			const response = await fetch(`${backendUrl}${PRODUCTS_ENDPOINT}`, {
-				method: 'POST',
-				body: backendFormData
-				// Note: Don't set Content-Type header - browser will set it with boundary for multipart/form-data
-			});
+			// Use API client with JWT authentication
+			const response = await api.post(PRODUCTS_ENDPOINT, backendFormData, session?.accessToken);
 
 			if (!response.ok) {
 				const errorData = await response.json().catch(() => ({}));
