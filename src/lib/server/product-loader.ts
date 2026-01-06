@@ -32,9 +32,6 @@ function isValidProductData(data: unknown): data is ProductData[] {
 export async function loadProducts(accessToken?: string): Promise<ProductData[]> {
 	try {
 		const product_data = await Promise.all([
-			// artificial delay TODO: delete
-			new Promise((resolve) => setTimeout(resolve, 2_000)),
-
 			// data fetch using api client
 			api
 				.get('/products', accessToken)
@@ -50,7 +47,7 @@ export async function loadProducts(accessToken?: string): Promise<ProductData[]>
 					}
 					return data;
 				})
-		]).then(([, products]) => products);
+		]).then(([products]) => products);
 
 		return product_data;
 	} catch (err) {

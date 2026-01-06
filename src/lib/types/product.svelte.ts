@@ -9,6 +9,7 @@ export class Product {
 	currency: string;
 	image: string;
 	count = $state(0);
+	ageRestrict: boolean;
 
 	constructor(data: ProductData) {
 		this.id = data.id;
@@ -17,6 +18,7 @@ export class Product {
 		this.type = data.type;
 		this.currency = data.currency;
 		this.image = data.image;
+		this.ageRestrict = data.ageRestrict;
 	}
 
 	// Get currency config based on currency name or symbol

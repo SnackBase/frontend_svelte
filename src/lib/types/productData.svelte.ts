@@ -5,4 +5,5 @@ export interface ProductData {
 	type: string;
 	currency: string;
 	image: string;
+	ageRestrict: boolean;
 }

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LockPerson from '$lib/icons/lock-person.svelte';
 	import type { Product } from '$lib/types/product.svelte';
 
 	let { product }: { product: Product } = $props();
@@ -16,8 +17,11 @@
 
 	<div class="truncate text-xl font-bold">{product.name}</div>
 
-	<div>
+	<div class="flex flex-row items-center justify-between">
 		{product.getFormattedPrice()}
+		{#if product.ageRestrict}
+			<LockPerson />
+		{/if}
 	</div>
 
 	<div class="flex w-full overflow-hidden">

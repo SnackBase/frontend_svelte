@@ -10,6 +10,8 @@
 	import ButtonStyle from '$lib/styles/ButtonStyle.svelte';
 	import type { CreateProductResponse } from './+page.server';
 	import { Product } from '$lib/types/product.svelte';
+	import FormCheckbox from '$lib/components/FormCheckbox.svelte';
+	import LockPerson from '$lib/icons/lock-person.svelte';
 
 	let { data, form }: { data: PageData; form: CreateProductResponse } = $props();
 
@@ -45,8 +47,9 @@
 			/>
 			<div class="flex flex-col">
 				<div class="max-w-64 truncate text-xl font-bold sm:max-w-sm">{product?.name}</div>
-				<div>
+				<div class="flex flex-row items-center justify-between gap-2">
 					{product ? product.getFormattedPrice() : 'NaN'}
+					<LockPerson />
 				</div>
 			</div>
 		</div>
@@ -101,6 +104,8 @@
 				accept={ALLOWED_IMAGE_TYPES.join(',')}
 				required
 			/>
+
+			<FormCheckbox id="ageRestrict" name="ageRestrict" label="Age Restriction" required={false} />
 
 			<div class="flex justify-end"><TextButton>Create</TextButton></div>
 		</form>

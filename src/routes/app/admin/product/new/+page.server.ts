@@ -26,11 +26,13 @@ export const actions = {
 		const session = await getAuthSession(event);
 
 		const data = await event.request.formData();
+		console.log(data);
 		const name = data.get('name');
 		const price = data.get('price');
 		const type = data.get('type');
 		const currency = data.get('currency');
 		const image = data.get('image');
+		const ageRestrict = data.get('ageRestrict');
 
 		// Validate required fields
 		if (!name) return fail(400, { missing: true, details: 'Product name is required.' });
@@ -95,7 +97,7 @@ export const actions = {
 			});
 		}
 
-		// Send product data to FastAPI backend
+		// Send product data to backend
 		try {
 			// Create FormData to send to backend (includes file upload)
 			const backendFormData = new FormData();
@@ -104,6 +106,7 @@ export const actions = {
 			backendFormData.append('type', type.toString());
 			backendFormData.append('currency', currency.toString());
 			backendFormData.append('image', image); // File object
+			if (ageRestrict !== null) backendFormData.append('ageRestrict', ageRestrict.toString());
 
 			// Use API client with JWT authentication
 			const response = await api.post(PRODUCTS_ENDPOINT, backendFormData, session?.accessToken);
