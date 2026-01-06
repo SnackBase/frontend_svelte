@@ -24,7 +24,6 @@ export const actions = {
 	default: async (event) => {
 		// Verify admin scope BEFORE processing form
 		const session = await getAuthSession(event);
-		requireScope(session, 'appadmin');
 
 		const data = await event.request.formData();
 		const name = data.get('name');

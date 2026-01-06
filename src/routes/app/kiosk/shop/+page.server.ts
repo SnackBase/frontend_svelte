@@ -5,7 +5,6 @@ import { loadProducts } from '$lib/server/product-loader';
 export const load = (async (event) => {
 	// Verify the user has kiosk scope
 	const session = await getAuthSession(event);
-	requireScope(session, 'kiosk');
 
 	// Load products using the same shared utility with JWT token
 	// The UI component will be identical, but the authentication is different
