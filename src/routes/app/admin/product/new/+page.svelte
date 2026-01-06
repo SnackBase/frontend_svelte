@@ -49,7 +49,9 @@
 				<div class="max-w-64 truncate text-xl font-bold sm:max-w-sm">{product?.name}</div>
 				<div class="flex flex-row items-center justify-between gap-2">
 					{product ? product.getFormattedPrice() : 'NaN'}
-					<LockPerson />
+					{#if product?.ageRestrict}
+						<LockPerson />
+					{/if}
 				</div>
 			</div>
 		</div>
