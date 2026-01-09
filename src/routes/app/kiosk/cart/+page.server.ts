@@ -3,12 +3,17 @@ import { getAuthSession, requireScope } from '$lib/server/auth-utils';
 import { fail } from '@sveltejs/kit';
 import { api } from '$lib/server/api-client';
 import { error } from 'console';
+import { AUTH_KEYCLOAK_ISSUER, AUTH_KEYCLOAK_ID, AUTH_KEYCLOAK_SECRET } from '$env/static/private';
 
 // Define the user type for kiosk checkout
 export interface KioskUser {
 	username: string;
 	firstName: string;
 	lastName: string;
+}
+
+interface TokenData {
+	access_token: string;
 }
 
 export const load: PageServerLoad = async (event) => {
@@ -74,9 +79,9 @@ export const actions: Actions = {
 			const cartItems = JSON.parse(items);
 
 			// Step 1: Authenticate the selected user using Keycloak Direct Access Grant
-			const keycloakUrl = process.env.AUTH_KEYCLOAK_ISSUER; // e.g., 'http://localhost:8080/realms/your-realm'
-			const clientId = process.env.AUTH_KEYCLOAK_ID;
-			const clientSecret = process.env.AUTH_KEYCLOAK_SECRET;
+			const keycloakUrl = AUTH_KEYCLOAK_ISSUER;
+			const clientId = AUTH_KEYCLOAK_ID;
+			const clientSecret = AUTH_KEYCLOAK_SECRET;
 
 			// Find the user's email/username from the users list
 			const users = await fetchKioskUsers(session.accessToken);
@@ -88,15 +93,15 @@ export const actions: Actions = {
 
 			// Authenticate using Keycloak Direct Access Grant (Resource Owner Password Credentials)
 			// TODO: Uncomment and configure when ready to use real Keycloak authentication
-			/*
-			const tokenResponse = await fetch(`${keycloakUrl}/protocol/openid-connect/token`, {
+
+			const tokenResponse = await event.fetch(`${keycloakUrl}/protocol/openid-connect/token`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 				body: new URLSearchParams({
 					grant_type: 'password',
 					client_id: clientId!,
 					client_secret: clientSecret!,
-					username: selectedUser.email, // or selectedUser.username
+					username: selectedUser.username, // or selectedUser.username
 					password: userPassword
 				})
 			});
@@ -107,40 +112,33 @@ export const actions: Actions = {
 				return fail(401, { error: 'Invalid credentials. Please check username and password.' });
 			}
 
-			const tokenData = await tokenResponse.json();
+			const tokenData: TokenData = await tokenResponse.json();
 			// tokenData contains: access_token, refresh_token, etc.
-			*/
 
 			// Step 2: Send checkout request to backend with authenticated user
-			// TODO: Replace with your actual backend endpoint
-			/*
-			const checkoutResponse = await fetch('http://your-backend/api/checkout', {
+			// Call the checkout API endpoint with the user's access token
+			const response = await event.fetch('/api/checkout', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					// Optionally include the user's access token
-					// 'Authorization': `Bearer ${tokenData.access_token}`
+					Authorization: `Bearer ${tokenData.access_token}`
 				},
-				body: JSON.stringify({
-					userId: selectedUserId,
-					items: cartItems
-				})
+				body: JSON.stringify({ items: cartItems })
 			});
 
-			if (!checkoutResponse.ok) {
-				throw new Error('Backend checkout failed');
+			const result = await response.json();
+
+			if (!response.ok || !result.success) {
+				return fail(response.status, {
+					error: result.error || 'Checkout failed'
+				});
 			}
 
-			const checkoutData = await checkoutResponse.json();
-			*/
-
-			// Mock success response (remove when implementing real backend)
-			const orderId = `ORDER-${Date.now()}`;
-
+			// Return success with order details
 			return {
 				success: true,
-				orderId,
-				message: `Order placed for ${selectedUser.firstName}`
+				orderId: result.orderId,
+				message: result.message
 			};
 		} catch (error) {
 			console.error('Checkout error:', error);

@@ -1,6 +1,8 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getAuthSession, requireAnyScope } from '$lib/server/auth-utils';
+import { api } from '$lib/server/api-client';
+import { error } from 'console';
 
 interface CheckoutItem {
 	productId: number;
@@ -11,6 +13,21 @@ interface CheckoutRequest {
 	items: CheckoutItem[];
 }
 
+interface OrderItem {
+	productId: number;
+	count: number;
+	pricePerItem: number;
+	totalPerOrderItem: number;
+}
+
+interface Order {
+	id: number;
+	userId: number;
+	createdAt: Date;
+	totalPerOrder: number;
+	items: OrderItem;
+}
+
 export const POST: RequestHandler = async (event) => {
 	// Require either customer OR kiosk scope
 	const session = await getAuthSession(event);
@@ -18,6 +35,11 @@ export const POST: RequestHandler = async (event) => {
 
 	try {
 		const body = (await event.request.json()) as CheckoutRequest;
+
+		// Check if there's an Authorization header (from kiosk mode)
+		// If present, use that token instead of the session token
+		const authHeader = event.request.headers.get('Authorization');
+		const accessToken = authHeader?.replace('Bearer ', '') || session?.accessToken;
 
 		// Validate request body
 		if (!body.items || !Array.isArray(body.items)) {
@@ -33,9 +55,7 @@ export const POST: RequestHandler = async (event) => {
 		// Validate each item
 		const invalidItems = body.items.filter(
 			(item) =>
-				typeof item.productId !== 'number' ||
-				typeof item.count !== 'number' ||
-				item.count <= 0
+				typeof item.productId !== 'number' || typeof item.count !== 'number' || item.count <= 0
 		);
 
 		if (invalidItems.length > 0) {
@@ -49,7 +69,7 @@ export const POST: RequestHandler = async (event) => {
 		}
 
 		// Simulate processing delay
-		await new Promise((resolve) => setTimeout(resolve, 500));
+		// await new Promise((resolve) => setTimeout(resolve, 500));
 
 		// Dummy checkout logic - in a real app, this would:
 		// - Verify product availability
@@ -58,7 +78,23 @@ export const POST: RequestHandler = async (event) => {
 		// - Create order record
 		// - Send confirmation email
 
-		const orderId = Math.random().toString(36).substring(2, 15);
+		// const orderId = Math.random().toString(36).substring(2, 15);
+
+		const response = await api.post('/orders', body, accessToken);
+
+		if (!response.ok) {
+			return json(
+				{
+					success: false,
+					error: await response.json()
+				},
+				{ status: 500 } // TODO: change status code depending on response
+			);
+		}
+
+		const order: Order = await response.json();
+
+		const orderId = order.id.toString();
 
 		return json({
 			success: true,
