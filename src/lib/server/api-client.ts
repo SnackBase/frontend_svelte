@@ -6,6 +6,7 @@ const API_BASE_URL = process.env.API_URL || 'http://localhost:8000/api/v1';
 
 interface ApiClientOptions extends RequestInit {
 	accessToken?: string;
+	queryParams?: Record<string, string | number | boolean>;
 }
 
 /**
@@ -16,7 +17,7 @@ export async function apiClient(
 	endpoint: string,
 	options: ApiClientOptions = {}
 ): Promise<Response> {
-	const { accessToken, headers = {}, ...fetchOptions } = options;
+	const { accessToken, queryParams, headers = {}, ...fetchOptions } = options;
 
 	// Build headers
 	const requestHeaders: Record<string, any> = {
@@ -34,8 +35,18 @@ export async function apiClient(
 		delete requestHeaders['Content-Type'];
 	}
 
-	// Make the request
-	const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
+	// Build URL with query parameters
+	let url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
+	if (queryParams) {
+		const searchParams = new URLSearchParams();
+		Object.entries(queryParams).forEach(([key, value]) => {
+			searchParams.append(key, String(value));
+		});
+		const queryString = searchParams.toString();
+		if (queryString) {
+			url += (url.includes('?') ? '&' : '?') + queryString;
+		}
+	}
 
 	return fetch(url, {
 		...fetchOptions,
@@ -47,8 +58,8 @@ export async function apiClient(
  * Convenience methods for common HTTP verbs
  */
 export const api = {
-	get: (endpoint: string, accessToken?: string) =>
-		apiClient(endpoint, { method: 'GET', accessToken }),
+	get: (endpoint: string, accessToken?: string, queryParams?: Record<string, string | number | boolean>) =>
+		apiClient(endpoint, { method: 'GET', accessToken, queryParams }),
 
 	post: (endpoint: string, body: any, accessToken?: string) =>
 		apiClient(endpoint, {

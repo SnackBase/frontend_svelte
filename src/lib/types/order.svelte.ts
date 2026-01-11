@@ -32,8 +32,10 @@ export interface OrderData {
 	id: number;
 	user: UserData;
 	createdAt: string | Date;
+	deletedAt: string | Date | null;
 	totalPerOrder: number;
 	items: OrderItemData[];
+	isDeleted: boolean;
 }
 
 // Class for order with typed items
@@ -41,15 +43,23 @@ export class Order {
 	id: number;
 	user: UserData;
 	createdAt: Date;
+	deletedAt: Date | null;
 	totalPerOrder: number;
 	items: OrderItem[];
+	isDeleted: boolean;
 
 	constructor(data: OrderData) {
 		this.id = data.id;
 		this.user = data.user;
 		this.createdAt = typeof data.createdAt === 'string' ? new Date(data.createdAt) : data.createdAt;
+		this.deletedAt = data.deletedAt
+			? typeof data.deletedAt === 'string'
+				? new Date(data.deletedAt)
+				: data.deletedAt
+			: null;
 		this.totalPerOrder = data.totalPerOrder;
 		this.items = data.items.map((item) => new OrderItem(item));
+		this.isDeleted = data.isDeleted;
 	}
 
 	// Get user's full name (for admin view)

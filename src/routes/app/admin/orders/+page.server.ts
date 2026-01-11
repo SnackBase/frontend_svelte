@@ -11,14 +11,20 @@ export const load = (async (event) => {
 	// Verify admin scope
 	requireScope(session, 'appadmin');
 
+	// Get the include-deleted query parameter
+	const includeDeleted = event.url.searchParams.get('include-deleted') === 'true';
+
+	// Build query parameters for API call
+	const queryParams = includeDeleted ? { 'include-deleted': true } : undefined;
+
 	// Fetch orders from admin endpoint (includes user data)
-	const response = await api.get('/admin/orders', session?.accessToken);
+	const response = await api.get('/admin/orders', session?.accessToken, queryParams);
 	if (!response.ok) {
 		error(response.status, { message: await response.text() });
 	}
 	const order_data: OrderData[] = await response.json();
 
-	return { order_data };
+	return { order_data, includeDeleted };
 }) satisfies PageServerLoad;
 
 export const actions = {
@@ -33,7 +39,7 @@ export const actions = {
 			return fail(400, { error: 'Order ID is required' });
 		}
 
-		const response = await api.delete(`/admin/order/${orderId}`, session?.accessToken);
+		const response = await api.delete(`/admin/orders/${orderId}`, session?.accessToken);
 
 		if (!response.ok) {
 			const errorText = await response.text();

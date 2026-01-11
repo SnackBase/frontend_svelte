@@ -13,7 +13,7 @@
 </script>
 
 {#snippet order_item_display(item: OrderItem)}
-	<div class="flex flex-row gap-2 rounded-2xl border p-2">
+	<div class="flex flex-row gap-2 rounded-2xl border p-2 {order.isDeleted ? 'opacity-50' : ''}">
 		<img
 			src={item.getProxiedImageUrl()}
 			alt={item.name}
@@ -34,7 +34,7 @@
 	</div>
 {/snippet}
 
-<div class="flex flex-col gap-4 rounded-2xl border p-4">
+<div class="flex flex-col gap-4 rounded-2xl border p-4 {order.isDeleted ? 'opacity-50' : ''}">
 	<!-- Order Header -->
 	<div class="flex flex-row justify-between">
 		<div class="flex flex-col gap-1">
@@ -44,11 +44,18 @@
 			{/if}
 			<div class="text-sm text-gray-500">Order #{order.id}</div>
 			<div class="text-sm">{DateFormatter(order.createdAt)}</div>
+			{#if order.isDeleted && order.deletedAt}
+				<div
+					class="mt-1 w-fit rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-700"
+				>
+					Deleted {DateFormatter(order.deletedAt)}
+				</div>
+			{/if}
 		</div>
 		<div class="flex flex-col items-end gap-1">
 			<div class="text-sm text-gray-500">Total</div>
 			<div class="text-xl font-bold">{order.getFormattedTotal()}</div>
-			{#if deleteButton}
+			{#if deleteButton && !order.isDeleted}
 				{@render deleteButton(order.id)}
 			{/if}
 		</div>
