@@ -3,6 +3,7 @@ import type { RequestHandler } from './$types';
 import { getAuthSession, requireAnyScope } from '$lib/server/auth-utils';
 import { api } from '$lib/server/api-client';
 import { error } from 'console';
+import type { OrderData } from '$lib/types/order.svelte';
 
 interface CheckoutItem {
 	productId: number;
@@ -11,21 +12,6 @@ interface CheckoutItem {
 
 interface CheckoutRequest {
 	items: CheckoutItem[];
-}
-
-interface OrderItem {
-	productId: number;
-	count: number;
-	pricePerItem: number;
-	totalPerOrderItem: number;
-}
-
-interface Order {
-	id: number;
-	userId: number;
-	createdAt: Date;
-	totalPerOrder: number;
-	items: OrderItem;
 }
 
 export const POST: RequestHandler = async (event) => {
@@ -92,7 +78,7 @@ export const POST: RequestHandler = async (event) => {
 			);
 		}
 
-		const order: Order = await response.json();
+		const order: OrderData = await response.json();
 
 		const orderId = order.id.toString();
 
