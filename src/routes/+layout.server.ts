@@ -28,6 +28,11 @@ export const load: LayoutServerLoad = async (event) => {
 			navbarLinks.push({ name: 'Admin', route: 'app/admin' });
 		}
 
+		// Admin Orders link - requires 'appadmin' scope
+		if (checkRouteIfAuthorized({ url: '/app/admin/orders', session: session })) {
+			navbarLinks.push({ name: 'Orders', route: 'app/admin/orders' });
+		}
+
 		// Kiosk link - requires 'kiosk' scope
 		if (checkRouteIfAuthorized({ url: '/app/kiosk/shop', session: session })) {
 			navbarLinks.push({ name: 'Kiosk', route: 'app/kiosk/shop' });

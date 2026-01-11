@@ -2,6 +2,7 @@ import { api } from '$lib/server/api-client';
 import { getAuthSession } from '$lib/server/auth-utils';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import type { OrderData } from '$lib/types/order.svelte';
 
 export const load = (async (event) => {
 	// Verify the user has customer scope
@@ -10,7 +11,7 @@ export const load = (async (event) => {
 	if (!response.ok) {
 		error(response.status, { message: await response.text() });
 	}
-	const order_data = await response.json();
+	const order_data: OrderData[] = await response.json();
 
 	return { order_data };
 }) satisfies PageServerLoad;

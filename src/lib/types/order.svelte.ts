@@ -1,5 +1,6 @@
 import { Product } from './product.svelte';
 import type { ProductData } from './productData.svelte';
+import type { UserData } from './userData.svelte';
 import { formatCurrency } from '$lib/constants/product';
 
 // Interface for order item data from API
@@ -29,7 +30,7 @@ export class OrderItem extends Product {
 // Interface for order data from API
 export interface OrderData {
 	id: number;
-	userId: number;
+	user: UserData;
 	createdAt: string | Date;
 	totalPerOrder: number;
 	items: OrderItemData[];
@@ -38,17 +39,23 @@ export interface OrderData {
 // Class for order with typed items
 export class Order {
 	id: number;
-	userId: number;
+	user: UserData;
 	createdAt: Date;
 	totalPerOrder: number;
 	items: OrderItem[];
 
 	constructor(data: OrderData) {
 		this.id = data.id;
-		this.userId = data.userId;
+		this.user = data.user;
 		this.createdAt = typeof data.createdAt === 'string' ? new Date(data.createdAt) : data.createdAt;
 		this.totalPerOrder = data.totalPerOrder;
 		this.items = data.items.map((item) => new OrderItem(item));
+	}
+
+	// Get user's full name (for admin view)
+	getUserFullName(): string {
+		if (!this.user) return 'Unknown User';
+		return `${this.user.firstName} ${this.user.lastName}`;
 	}
 
 	// Format total per order with currency (uses first item's currency)
