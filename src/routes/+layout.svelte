@@ -3,6 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import person from '$lib/assets/person.svg';
 	import NavBarPageLink from '$lib/components/NavBarPageLink.svelte';
+	import ToastContainer from '$lib/components/ToastContainer.svelte';
 	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { cartStore } from '$lib/stores/cartStore.svelte';
 
@@ -131,3 +132,6 @@
 		<!-- TODO: add imprint and other necessary information -->
 	</footer>
 </div>
+
+<!-- Toast Container -->
+<ToastContainer />
