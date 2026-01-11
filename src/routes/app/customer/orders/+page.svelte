@@ -32,7 +32,7 @@
 {/snippet}
 
 {#snippet order_display(order: Order)}
-	<div class="flex flex-col gap-4 rounded-4xl border p-4">
+	<div class="flex flex-col gap-4 rounded-2xl border p-4">
 		<!-- Order Header -->
 		<div class="flex flex-row justify-between">
 			<div class="flex flex-col gap-1">
@@ -57,7 +57,7 @@
 	</div>
 {/snippet}
 
-<div class="flex min-w-xs flex-col gap-4 sm:min-w-xl">
+<div class="flex min-w-xs flex-col gap-4">
 	{#each orders as order}
 		{@render order_display(order)}
 	{/each}

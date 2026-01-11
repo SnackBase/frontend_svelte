@@ -127,7 +127,7 @@
 	<!-- FOOTER -->
 	<footer class="mt-auto">
 		{@render colorGradientHorizontalLine()}
-		<p class="p-4">This is the Footer. Here might be a link to the impressum.</p>
-		<!-- TODO: add impressum and other necessary information -->
+		<p class="p-4">This is the Footer. Here might be a link to the imprint.</p>
+		<!-- TODO: add imprint and other necessary information -->
 	</footer>
 </div>
