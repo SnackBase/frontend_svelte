@@ -20,7 +20,7 @@
 				name="userId"
 				bind:value={selectedUserId}
 				required
-				class="w-full rounded-lg border-2 border-gray-300 bg-white px-4 py-2 transition-colors focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800"
+				class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 transition-colors focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800"
 			>
 				<option value="" disabled>Choose a user...</option>
 				{#each data.users as user}
@@ -43,7 +43,7 @@
 				bind:value={password}
 				required
 				placeholder="Enter password to confirm identity"
-				class="w-full rounded-lg border-2 border-gray-300 bg-white px-4 py-2 transition-colors focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800"
+				class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 transition-colors focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800"
 			/>
 			<p class="mt-1 text-xs text-gray-500">
 				For security, the selected user must authenticate with their password.

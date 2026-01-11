@@ -14,7 +14,7 @@ export const PRODUCT_TYPES = Object.values(ProductType);
 
 // Shared form input styles
 export const INPUT_BASE_CLASS =
-	'rounded-full border-2 border-black dark:border-white dark:bg-gray-950 px-4 py-2 placeholder:text-gray-500';
+	'rounded-full border border-black dark:border-white dark:bg-gray-950 px-4 py-2 placeholder:text-gray-500';
 
 export const INPUT_NUMBER_CLASS = `${INPUT_BASE_CLASS} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`;
 

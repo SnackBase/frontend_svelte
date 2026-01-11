@@ -39,7 +39,7 @@
 		</div>
 
 		<!-- display new product that was created -->
-		<div class="flex flex-col gap-2 rounded-3xl border-2 p-4 sm:flex-row">
+		<div class="flex flex-col gap-2 rounded-3xl border p-4 sm:flex-row">
 			<img
 				src={product?.getProxiedImageUrl()}
 				alt={product?.name}
@@ -66,7 +66,7 @@
 		<div class="text-2xl font-bold">Create New Product</div>
 
 		{#if form?.missing}
-			<div class="rounded-3xl border-2 border-red-500 bg-red-50 p-4 dark:bg-red-950">
+			<div class="rounded-3xl border border-red-500 bg-red-50 p-4 dark:bg-red-950">
 				<div class="font-bold text-red-700 dark:text-red-300">Error: Missing Required Field</div>
 				<div class="text-red-600 dark:text-red-400">
 					{#if form.details}

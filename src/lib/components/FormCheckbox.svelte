@@ -17,7 +17,7 @@
 		{name}
 		{required}
 		type="checkbox"
-		class="h-4 w-4 rounded-full border-2 border-black focus:ring-2 dark:border-white"
+		class="h-4 w-4 rounded-full border border-black focus:ring-2 dark:border-white"
 	/>
 	<label for={id} class="block">{label}</label>
 </div>

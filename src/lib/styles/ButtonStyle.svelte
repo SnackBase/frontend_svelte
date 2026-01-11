@@ -3,7 +3,7 @@
 </script>
 
 <span
-	class="flex rounded-full border-2 bg-transparent px-4 py-2 font-bold hover:border-blue-500 hover:text-blue-500 {style}"
+	class="flex rounded-full border bg-transparent px-4 py-2 font-bold hover:border-blue-500 hover:text-blue-500 {style}"
 >
 	{@render children()}
 </span>

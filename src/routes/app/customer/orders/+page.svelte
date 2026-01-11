@@ -10,7 +10,7 @@
 </script>
 
 {#snippet order_item_display(item: OrderItem)}
-	<div class="flex flex-row gap-2 rounded-2xl border-2 p-2">
+	<div class="flex flex-row gap-2 rounded-2xl border p-2">
 		<img
 			src={item.getProxiedImageUrl()}
 			alt={item.name}
@@ -32,7 +32,7 @@
 {/snippet}
 
 {#snippet order_display(order: Order)}
-	<div class="flex flex-col gap-4 rounded-4xl border-2 p-4">
+	<div class="flex flex-col gap-4 rounded-4xl border p-4">
 		<!-- Order Header -->
 		<div class="flex flex-row justify-between">
 			<div class="flex flex-col gap-1">

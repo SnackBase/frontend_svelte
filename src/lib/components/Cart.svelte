@@ -68,7 +68,7 @@
 					<button
 						onclick={() => product.decrement()}
 						aria-label="Decrease quantity"
-						class="flex size-8 items-center justify-center rounded-full border-2 hover:border-blue-500 hover:text-blue-500"
+						class="flex size-8 items-center justify-center rounded-full border hover:border-blue-500 hover:text-blue-500"
 					>
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
 							<path fill="currentColor" d="M6 13h12v-2H6z" />
@@ -78,7 +78,7 @@
 					<button
 						onclick={() => product.increment()}
 						aria-label="Increase quantity"
-						class="flex size-8 items-center justify-center rounded-full border-2 hover:border-blue-500 hover:text-blue-500"
+						class="flex size-8 items-center justify-center rounded-full border hover:border-blue-500 hover:text-blue-500"
 					>
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
 							<path fill="currentColor" d="M6 13h12v-2H6z" />
@@ -123,7 +123,7 @@
 			<button
 				type="button"
 				onclick={handleClearCart}
-				class="w-full rounded-full border-2 border-red-500 px-6 py-2 font-semibold text-red-500 transition-all hover:bg-red-500 hover:text-white"
+				class="w-full rounded-full border border-red-500 px-6 py-2 font-semibold text-red-500 transition-all hover:bg-red-500 hover:text-white"
 			>
 				Clear Cart
 			</button>
