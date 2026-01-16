@@ -22,9 +22,9 @@ export const load: LayoutServerLoad = async (event) => {
 		if (checkRouteIfAuthorized({ url: '/app/customer/orders', session: session })) {
 			navbarLinks.push({ name: 'Orders', route: 'app/customer/orders' });
 		}
-		// Orders link - requires 'customer' scope
-		if (checkRouteIfAuthorized({ url: '/app/customer/balance', session: session })) {
-			navbarLinks.push({ name: 'Balance', route: 'app/customer/balance' });
+		// Payments link - requires 'customer' scope
+		if (checkRouteIfAuthorized({ url: '/app/customer/payments', session: session })) {
+			navbarLinks.push({ name: 'Payments', route: 'app/customer/payments' });
 		}
 
 		// Admin link - requires 'appadmin' scope
@@ -35,6 +35,11 @@ export const load: LayoutServerLoad = async (event) => {
 		// Admin Orders link - requires 'appadmin' scope
 		if (checkRouteIfAuthorized({ url: '/app/admin/orders', session: session })) {
 			navbarLinks.push({ name: 'Orders', route: 'app/admin/orders' });
+		}
+
+		// Admin Payments link - requires 'appadmin' scope
+		if (checkRouteIfAuthorized({ url: '/app/admin/payments', session: session })) {
+			navbarLinks.push({ name: 'Payments', route: 'app/admin/payments' });
 		}
 
 		// Kiosk link - requires 'kiosk' scope

@@ -1,0 +1,192 @@
+<script lang="ts">
+	import { Payment, type PaymentData } from '$lib/types/payment.svelte';
+	import PaymentDisplay from '$lib/components/PaymentDisplay.svelte';
+	import Checkmark from '$lib/icons/checkmark.svelte';
+	import Cross from '$lib/icons/cross.svelte';
+	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
+	import { toastStore } from '$lib/stores/toast.svelte';
+	import type { PageProps } from './$types';
+	import type { FastAPIError } from '$lib/types/fastapierror.svelte';
+
+	let { data }: PageProps = $props();
+
+	// Search state
+	let searchQuery = $state('');
+
+	// Status filter state
+	type StatusFilter = 'pending' | 'confirmed' | 'declined' | 'all';
+	let statusFilter = $state<StatusFilter>('pending');
+
+	// Transform payments (user data already included from API)
+	const allPayments = $derived(
+		data.payments_data.map((paymentData: PaymentData) => new Payment(paymentData))
+	);
+
+	// Filtered payments based on search and status
+	const filteredPayments = $derived(
+		allPayments.filter((payment) => {
+			// Status filter
+			if (statusFilter === 'pending' && payment.processedAt !== null) return false;
+			if (statusFilter === 'confirmed' && !(payment.confirmed === true && payment.processedAt !== null)) return false;
+			if (statusFilter === 'declined' && !(payment.confirmed === false && payment.processedAt !== null)) return false;
+
+			// Search filter
+			if (!searchQuery) return true;
+			const query = searchQuery.toLowerCase();
+			const user = payment.user;
+			if (!user) return false;
+			return (
+				user.username?.toLowerCase().includes(query) ||
+				user.firstName?.toLowerCase().includes(query) ||
+				user.lastName?.toLowerCase().includes(query) ||
+				user.email?.toLowerCase().includes(query)
+			);
+		})
+	);
+</script>
+
+{#snippet actionButton(paymentId: number)}
+	{@const payment = allPayments.find((p) => p.id === paymentId)}
+	{#if payment && !payment.processedAt}
+		<div class="mt-2 flex items-center gap-2">
+			<form
+				method="POST"
+				action="?/decline"
+				use:enhance={() => {
+					return async ({ result }) => {
+						if (result.type === 'failure') {
+							let errorMessage = 'Failed to decline payment';
+							const errorString = result.data?.error;
+							if (errorString && typeof errorString === 'string') {
+								try {
+									const errorData: FastAPIError = JSON.parse(errorString);
+									errorMessage = errorData.detail || errorMessage;
+								} catch {
+									errorMessage = errorString;
+								}
+							}
+							toastStore.error(errorMessage);
+						} else if (result.type === 'error') {
+							toastStore.error('An unexpected error occurred while declining the payment');
+						} else if (result.type === 'success') {
+							toastStore.success(`Payment #${paymentId} declined`);
+							await invalidateAll();
+						}
+					};
+				}}
+			>
+				<input type="hidden" name="paymentId" value={paymentId} />
+				<button
+					type="submit"
+					class="flex size-8 items-center justify-center rounded-full border hover:border-red-500 hover:text-red-500"
+					aria-label="Decline payment"
+				>
+					<Cross size={20} />
+				</button>
+			</form>
+			<form
+				method="POST"
+				action="?/confirm"
+				use:enhance={() => {
+					return async ({ result }) => {
+						if (result.type === 'failure') {
+							let errorMessage = 'Failed to confirm payment';
+							const errorString = result.data?.error;
+							if (errorString && typeof errorString === 'string') {
+								try {
+									const errorData: FastAPIError = JSON.parse(errorString);
+									errorMessage = errorData.detail || errorMessage;
+								} catch {
+									errorMessage = errorString;
+								}
+							}
+							toastStore.error(errorMessage);
+						} else if (result.type === 'error') {
+							toastStore.error('An unexpected error occurred while confirming the payment');
+						} else if (result.type === 'success') {
+							toastStore.success(`Payment #${paymentId} confirmed successfully`);
+							await invalidateAll();
+						}
+					};
+				}}
+			>
+				<input type="hidden" name="paymentId" value={paymentId} />
+				<button
+					type="submit"
+					class="flex size-8 items-center justify-center rounded-full border hover:border-green-500 hover:text-green-500"
+					aria-label="Confirm payment"
+				>
+					<Checkmark size={20} />
+				</button>
+			</form>
+		</div>
+	{/if}
+{/snippet}
+
+<div class="flex min-w-xs flex-col gap-4">
+	<!-- Search Input -->
+	<input
+		type="text"
+		bind:value={searchQuery}
+		placeholder="Search by username, name, or email..."
+		class="rounded-lg border px-4 py-2 text-gray-700"
+	/>
+
+	<!-- Status Filter -->
+	<div class="flex gap-2">
+		<button
+			onclick={() => (statusFilter = 'pending')}
+			class="rounded-lg px-3 py-1.5 text-sm transition-colors {statusFilter === 'pending'
+				? 'bg-yellow-100 text-yellow-700'
+				: 'border hover:bg-gray-100 dark:hover:bg-gray-800'}"
+		>
+			Pending
+		</button>
+		<button
+			onclick={() => (statusFilter = 'confirmed')}
+			class="rounded-lg px-3 py-1.5 text-sm transition-colors {statusFilter === 'confirmed'
+				? 'bg-green-100 text-green-700'
+				: 'border hover:bg-gray-100 dark:hover:bg-gray-800'}"
+		>
+			Confirmed
+		</button>
+		<button
+			onclick={() => (statusFilter = 'declined')}
+			class="rounded-lg px-3 py-1.5 text-sm transition-colors {statusFilter === 'declined'
+				? 'bg-red-100 text-red-700'
+				: 'border hover:bg-gray-100 dark:hover:bg-gray-800'}"
+		>
+			Declined
+		</button>
+		<button
+			onclick={() => (statusFilter = 'all')}
+			class="rounded-lg px-3 py-1.5 text-sm transition-colors {statusFilter === 'all'
+				? 'bg-gray-200 dark:bg-gray-700'
+				: 'border hover:bg-gray-100 dark:hover:bg-gray-800'}"
+		>
+			All
+		</button>
+	</div>
+
+	<!-- Payments List -->
+	{#each filteredPayments as payment}
+		<PaymentDisplay {payment} showUser={true} {actionButton} />
+	{/each}
+
+	{#if filteredPayments.length === 0}
+		<p class="text-center text-gray-500">
+			{#if searchQuery}
+				No payments found matching your search
+			{:else if statusFilter === 'pending'}
+				No pending payments
+			{:else if statusFilter === 'confirmed'}
+				No confirmed payments
+			{:else if statusFilter === 'declined'}
+				No declined payments
+			{:else}
+				No payments yet
+			{/if}
+		</p>
+	{/if}
+</div>
