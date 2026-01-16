@@ -1,6 +1,7 @@
 import type { LayoutServerLoad } from './$types';
 import type { ExtendedSession } from '$lib/server/auth-utils';
 import { checkRouteIfAuthorized, hasAnyScope } from '$lib/server/auth-utils';
+import { api } from '$lib/server/api-client';
 
 interface NavBarLink {
 	name: string;
@@ -61,6 +62,20 @@ export const load: LayoutServerLoad = async (event) => {
 		cartUrl = '/app/customer/cart';
 	}
 
+	// Fetch balance for customers
+	let balance: number | null = null;
+	if (session?.scopes?.includes('customer') && session?.accessToken) {
+		try {
+			const response = await api.get('/balance', session.accessToken);
+			if (response.ok) {
+				const data = await response.json();
+				balance = data;
+			}
+		} catch {
+			// Silently fail - balance will be null
+		}
+	}
+
 	return {
 		session: session
 			? {
@@ -70,6 +85,7 @@ export const load: LayoutServerLoad = async (event) => {
 			: null,
 		navbarLinks,
 		showShoppingCart,
-		cartUrl
+		cartUrl,
+		balance
 	};
 };
