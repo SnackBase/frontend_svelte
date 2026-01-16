@@ -22,6 +22,10 @@ export const load: LayoutServerLoad = async (event) => {
 		if (checkRouteIfAuthorized({ url: '/app/customer/orders', session: session })) {
 			navbarLinks.push({ name: 'Orders', route: 'app/customer/orders' });
 		}
+		// Orders link - requires 'customer' scope
+		if (checkRouteIfAuthorized({ url: '/app/customer/balance', session: session })) {
+			navbarLinks.push({ name: 'Balance', route: 'app/customer/balance' });
+		}
 
 		// Admin link - requires 'appadmin' scope
 		if (checkRouteIfAuthorized({ url: '/app/admin', session: session })) {

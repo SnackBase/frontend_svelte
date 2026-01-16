@@ -6,10 +6,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import { toastStore } from '$lib/stores/toast.svelte';
 	import type { PageProps } from './$types';
-
-	interface FastAPIError {
-		detail: string;
-	}
+	import type { FastAPIError } from '$lib/types/fastapierror.svelte';
 
 	let { data }: PageProps = $props();
 
