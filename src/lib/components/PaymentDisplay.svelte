@@ -43,7 +43,6 @@
 		<div class="flex flex-col gap-1">
 			{#if showUser && payment.user}
 				<div class="font-semibold">{payment.getUserFullName()}</div>
-				<div class="text-xs text-gray-500">{payment.user.email}</div>
 			{/if}
 			<div class="text-sm text-gray-500">Payment #{payment.id}</div>
 			<div class="text-sm">{DateFormatter(payment.createdAt)}</div>

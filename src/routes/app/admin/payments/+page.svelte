@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Payment, type PaymentData } from '$lib/types/payment.svelte';
+	import { User } from '$lib/types/userData.svelte';
 	import PaymentDisplay from '$lib/components/PaymentDisplay.svelte';
 	import Checkmark from '$lib/icons/checkmark.svelte';
 	import Cross from '$lib/icons/cross.svelte';
@@ -28,20 +29,21 @@
 		allPayments.filter((payment) => {
 			// Status filter
 			if (statusFilter === 'pending' && payment.processedAt !== null) return false;
-			if (statusFilter === 'confirmed' && !(payment.confirmed === true && payment.processedAt !== null)) return false;
-			if (statusFilter === 'declined' && !(payment.confirmed === false && payment.processedAt !== null)) return false;
+			if (
+				statusFilter === 'confirmed' &&
+				!(payment.confirmed === true && payment.processedAt !== null)
+			)
+				return false;
+			if (
+				statusFilter === 'declined' &&
+				!(payment.confirmed === false && payment.processedAt !== null)
+			)
+				return false;
 
 			// Search filter
 			if (!searchQuery) return true;
-			const query = searchQuery.toLowerCase();
-			const user = payment.user;
-			if (!user) return false;
-			return (
-				user.username?.toLowerCase().includes(query) ||
-				user.firstName?.toLowerCase().includes(query) ||
-				user.lastName?.toLowerCase().includes(query) ||
-				user.email?.toLowerCase().includes(query)
-			);
+			if (!payment.user) return false;
+			return User.matchesSearch(payment.user, searchQuery);
 		})
 	);
 </script>

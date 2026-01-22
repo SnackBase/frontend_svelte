@@ -40,7 +40,6 @@
 		<div class="flex flex-col gap-1">
 			{#if showUser && order.user}
 				<div class="font-semibold">{order.getUserFullName()}</div>
-				<div class="text-xs text-gray-500">{order.user.email}</div>
 			{/if}
 			<div class="text-sm text-gray-500">Order #{order.id}</div>
 			<div class="text-sm">{DateFormatter(order.createdAt)}</div>

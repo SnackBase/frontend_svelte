@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Order, type OrderData } from '$lib/types/order.svelte';
+	import { User } from '$lib/types/userData.svelte';
 	import OrderDisplay from '$lib/components/OrderDisplay.svelte';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
@@ -34,15 +35,8 @@
 	const filteredOrders = $derived(
 		allOrders.filter((order) => {
 			if (!searchQuery) return true;
-			const query = searchQuery.toLowerCase();
-			const user = order.user;
-			if (!user) return false;
-			return (
-				user.username.toLowerCase().includes(query) ||
-				user.firstName.toLowerCase().includes(query) ||
-				user.lastName.toLowerCase().includes(query) ||
-				user.email.toLowerCase().includes(query)
-			);
+			if (!order.user) return false;
+			return User.matchesSearch(order.user, searchQuery);
 		})
 	);
 

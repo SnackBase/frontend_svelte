@@ -141,7 +141,7 @@
 							// Success - show order ID
 							const data = result.data as { success?: boolean; orderId?: string };
 							if (data?.success && data.orderId) {
-								alert(`Checkout successful! Order ID: ${data.orderId}`);
+								toastStore.success(`Checkout successful! Order ID: ${data.orderId}`);
 								// Clear cart after successful checkout
 								cartStore.clearCart();
 							}
