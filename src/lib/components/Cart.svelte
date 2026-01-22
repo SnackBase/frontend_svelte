@@ -12,6 +12,7 @@
 -->
 <script lang="ts">
 	import { cartStore } from '$lib/stores/cartStore.svelte';
+	import { toastStore } from '$lib/stores/toast.svelte';
 	import type { Product } from '$lib/types/product.svelte';
 	import { enhance } from '$app/forms';
 
@@ -24,7 +25,6 @@
 	let { mode, shopUrl, userSelectionSnippet }: CartProps = $props();
 
 	let isCheckingOut = $state(false);
-	let checkoutError = $state<string | null>(null);
 	let checkoutForm = $state<HTMLFormElement>();
 
 	function handleCheckoutClick() {
@@ -128,13 +128,6 @@
 				Clear Cart
 			</button>
 
-			<!-- Error Message -->
-			{#if checkoutError}
-				<div class="rounded-lg bg-red-100 p-3 text-red-700 dark:bg-red-900/30 dark:text-red-400">
-					{checkoutError}
-				</div>
-			{/if}
-
 			<!-- Checkout Form -->
 			<form
 				bind:this={checkoutForm}
@@ -142,7 +135,6 @@
 				action="?/checkout"
 				use:enhance={() => {
 					isCheckingOut = true;
-					checkoutError = null;
 
 					return async ({ result, update }) => {
 						if (result.type === 'success') {
@@ -154,9 +146,10 @@
 								cartStore.clearCart();
 							}
 						} else if (result.type === 'failure') {
-							// Show error message
+							// Show error message via toast
 							const data = result.data as { error?: string };
-							checkoutError = data?.error || 'Checkout failed';
+							const errorMessage = data?.error || 'Checkout failed';
+							toastStore.error(errorMessage);
 						}
 
 						isCheckingOut = false;

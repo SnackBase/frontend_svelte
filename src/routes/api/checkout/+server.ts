@@ -2,8 +2,8 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getAuthSession, requireAnyScope } from '$lib/server/auth-utils';
 import { api } from '$lib/server/api-client';
-import { error } from 'console';
 import type { OrderData } from '$lib/types/order.svelte';
+import type { FastAPIError } from '$lib/types/fastapierror.svelte';
 
 interface CheckoutItem {
 	productId: number;
@@ -69,12 +69,13 @@ export const POST: RequestHandler = async (event) => {
 		const response = await api.post('/orders', body, accessToken);
 
 		if (!response.ok) {
+			const errorData: FastAPIError = await response.json();
 			return json(
 				{
 					success: false,
-					error: await response.json()
+					error: errorData.detail || 'Checkout failed'
 				},
-				{ status: 500 } // TODO: change status code depending on response
+				{ status: response.status }
 			);
 		}
 
