@@ -31,7 +31,7 @@
 		if (!checkoutForm) return;
 
 		// Update hidden input with current cart items
-		const items = cartStore.getProducts.map((product) => ({
+		const items = cartStore.cartItems.map((product) => ({
 			productId: product.id,
 			count: product.count
 		}));
@@ -103,7 +103,7 @@
 {#if cartStore.totalItems > 0}
 	<div class="flex flex-col items-center">
 		<div class="flex w-full flex-col gap-4">
-			{#each cartStore.getProducts as product}
+			{#each cartStore.cartItems as product}
 				{@render productInCart(product)}
 			{/each}
 		</div>

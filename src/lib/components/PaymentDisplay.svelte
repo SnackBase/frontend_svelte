@@ -56,7 +56,7 @@
 		</div>
 		<div class="flex flex-col items-end gap-1">
 			<div class="text-sm text-gray-500">Amount</div>
-			<div class="text-xl font-bold">{payment.getFormatetdAmount()}</div>
+			<div class="text-xl font-bold">{payment.getFormattedAmount()}</div>
 			{#if actionButton}
 				{@render actionButton(payment.id)}
 			{/if}

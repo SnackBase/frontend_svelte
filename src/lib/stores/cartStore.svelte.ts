@@ -15,16 +15,12 @@ class CartStore {
 
 	get formattedTotalPrice(): string {
 		// Get currency from first product in cart, or default to first currency
-		const firstProduct = this.getProducts[0];
+		const firstProduct = this.cartItems[0];
 		const currencyConfig = firstProduct ? firstProduct.getCurrencyConfig() : CURRENCIES[0];
 		return formatCurrency(this.totalPrice, currencyConfig);
 	}
 
-	get itemsInCart(): Product[] {
-		return this.products.filter((p) => p.count > 0);
-	}
-
-	get getProducts(): Product[] {
+	get cartItems(): Product[] {
 		return this.products.filter((p) => p.count > 0);
 	}
 

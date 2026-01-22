@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
 	import PaymentDisplay from '$lib/components/PaymentDisplay.svelte';
 	import TextButton from '$lib/components/TextButton.svelte';
 	import { INPUT_BASE_CLASS } from '$lib/constants/product';
-	import { toastStore } from '$lib/stores/toast.svelte';
-	import type { FastAPIError } from '$lib/types/fastapierror.svelte';
 	import { Payment, type PaymentData } from '$lib/types/payment.svelte';
+	import { createFormEnhanceHandler } from '$lib/utils/formEnhanceHandler';
 	import type { PageProps } from './$types';
 	import { slide } from 'svelte/transition';
 
@@ -56,29 +54,12 @@
 			<form
 				method="POST"
 				class="flex flex-col gap-2 pb-4"
-				use:enhance={() => {
-					return async ({ result }) => {
-						if (result.type === 'failure') {
-							let errorMessage = 'Failed to make deposit';
-							const errorString = result.data?.error;
-							if (errorString && typeof errorString === 'string') {
-								try {
-									const errorData: FastAPIError = JSON.parse(errorString);
-									errorMessage = errorData.detail || errorMessage;
-								} catch {
-									errorMessage = errorString;
-								}
-							}
-							toastStore.error(errorMessage);
-						} else if (result.type === 'error') {
-							toastStore.error('An unexpected error occurred while making the deposit');
-						} else if (result.type === 'success') {
-							toastStore.success(`Deposit made successfully`);
-							await invalidateAll();
-							closeForm();
-						}
-					};
-				}}
+				use:enhance={createFormEnhanceHandler({
+					failureMessage: 'Failed to make deposit',
+					errorMessage: 'An unexpected error occurred while making the deposit',
+					successMessage: 'Deposit made successfully',
+					onSuccess: closeForm
+				})}
 			>
 				<label class="flex flex-col gap-2">
 					Amount

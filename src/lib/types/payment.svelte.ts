@@ -1,5 +1,6 @@
-import { formatCurrency, type CurrencyConfig } from '$lib/constants/product';
-import type { UserData } from './userData.svelte';
+import { formatCurrency, getCurrencyConfig, type CurrencyConfig } from '$lib/constants/product';
+import { User, type UserData } from './userData.svelte';
+import { toDate, toDateOrNull } from '$lib/utils/dateUtils';
 
 export interface PaymentData {
 	id: number;
@@ -23,12 +24,8 @@ export class Payment {
 	constructor(data: PaymentData) {
 		this.id = data.id;
 		this.amount = data.amount;
-		this.createdAt = typeof data.createdAt === 'string' ? new Date(data.createdAt) : data.createdAt;
-		this.processedAt = data.processedAt
-			? typeof data.processedAt === 'string'
-				? new Date(data.processedAt)
-				: data.processedAt
-			: null;
+		this.createdAt = toDate(data.createdAt);
+		this.processedAt = toDateOrNull(data.processedAt);
 		this.confirmed = data.confirmed;
 		this.note = data.note;
 		this.user = data.user;
@@ -37,16 +34,16 @@ export class Payment {
 	// Get user's full name (for admin view)
 	getUserFullName(): string {
 		if (!this.user) return 'Unknown User';
-		return `${this.user.firstName} ${this.user.lastName}`;
+		return new User(this.user).getFullName();
 	}
 
-	// Format total per order with currency (uses first item's currency)
-	getFormatetdAmount(): string {
+	// Format amount with currency
+	getFormattedAmount(): string {
 		return formatCurrency(this.amount, this.getCurrencyConfig());
 	}
 
-	// TODO: remove this and replace by api call/global setting
+	// Get currency config (defaults to EUR)
 	getCurrencyConfig(): CurrencyConfig {
-		return { code: 'EUR', locale: 'de-DE', name: 'Euro', symbol: '€' };
+		return getCurrencyConfig('EUR');
 	}
 }

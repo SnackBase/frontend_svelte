@@ -2,12 +2,11 @@
 	import { Order, type OrderData } from '$lib/types/order.svelte';
 	import { User } from '$lib/types/userData.svelte';
 	import OrderDisplay from '$lib/components/OrderDisplay.svelte';
+	import SearchInput from '$lib/components/SearchInput.svelte';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
-	import { invalidateAll } from '$app/navigation';
-	import { toastStore } from '$lib/stores/toast.svelte';
+	import { createFormEnhanceHandler } from '$lib/utils/formEnhanceHandler';
 	import type { PageProps } from './$types';
-	import type { FastAPIError } from '$lib/types/fastapierror.svelte';
 
 	let { data }: PageProps = $props();
 
@@ -52,30 +51,11 @@
 	<form
 		method="POST"
 		action="?/delete"
-		use:enhance={() => {
-			return async ({ result }) => {
-				if (result.type === 'failure') {
-					let errorMessage = 'Failed to delete order';
-					const errorString = result.data?.error;
-					if (errorString && typeof errorString === 'string') {
-						try {
-							const errorData: FastAPIError = JSON.parse(errorString);
-							errorMessage = errorData.detail || errorMessage;
-						} catch {
-							errorMessage = errorString;
-						}
-					}
-					toastStore.error(errorMessage);
-				} else if (result.type === 'error') {
-					toastStore.error('An unexpected error occurred while deleting the order');
-				} else if (result.type === 'success') {
-					// Show success toast
-					toastStore.success(`Order #${orderId} deleted successfully`);
-					// Reload the orders data
-					await invalidateAll();
-				}
-			};
-		}}
+		use:enhance={createFormEnhanceHandler({
+			failureMessage: 'Failed to delete order',
+			errorMessage: 'An unexpected error occurred while deleting the order',
+			successMessage: `Order #${orderId} deleted successfully`
+		})}
 	>
 		<input type="hidden" name="orderId" value={orderId} />
 		<button
@@ -107,12 +87,7 @@
 
 <div class="flex min-w-xs flex-col gap-4">
 	<!-- Search Input -->
-	<input
-		type="text"
-		bind:value={searchQuery}
-		placeholder="Search by username, name, or email..."
-		class="rounded-lg border px-4 py-2 text-gray-700"
-	/>
+	<SearchInput bind:value={searchQuery} placeholder="Search by username, name, or email..." />
 
 	<!-- Include Deleted Toggle -->
 	<label class="flex cursor-pointer items-center gap-2">

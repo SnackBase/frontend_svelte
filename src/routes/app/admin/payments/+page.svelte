@@ -2,13 +2,13 @@
 	import { Payment, type PaymentData } from '$lib/types/payment.svelte';
 	import { User } from '$lib/types/userData.svelte';
 	import PaymentDisplay from '$lib/components/PaymentDisplay.svelte';
+	import SearchInput from '$lib/components/SearchInput.svelte';
+	import FilterButtons, { type FilterOption } from '$lib/components/FilterButtons.svelte';
 	import Checkmark from '$lib/icons/checkmark.svelte';
 	import Cross from '$lib/icons/cross.svelte';
 	import { enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
-	import { toastStore } from '$lib/stores/toast.svelte';
+	import { createFormEnhanceHandler } from '$lib/utils/formEnhanceHandler';
 	import type { PageProps } from './$types';
-	import type { FastAPIError } from '$lib/types/fastapierror.svelte';
 
 	let { data }: PageProps = $props();
 
@@ -16,8 +16,14 @@
 	let searchQuery = $state('');
 
 	// Status filter state
-	type StatusFilter = 'pending' | 'confirmed' | 'declined' | 'all';
-	let statusFilter = $state<StatusFilter>('pending');
+	let statusFilter = $state('pending');
+
+	const statusFilterOptions: FilterOption[] = [
+		{ value: 'pending', label: 'Pending', activeClass: 'bg-yellow-100 text-yellow-700' },
+		{ value: 'confirmed', label: 'Confirmed', activeClass: 'bg-green-100 text-green-700' },
+		{ value: 'declined', label: 'Declined', activeClass: 'bg-red-100 text-red-700' },
+		{ value: 'all', label: 'All', activeClass: 'bg-gray-200 dark:bg-gray-700' }
+	];
 
 	// Transform payments (user data already included from API)
 	const allPayments = $derived(
@@ -55,28 +61,11 @@
 			<form
 				method="POST"
 				action="?/decline"
-				use:enhance={() => {
-					return async ({ result }) => {
-						if (result.type === 'failure') {
-							let errorMessage = 'Failed to decline payment';
-							const errorString = result.data?.error;
-							if (errorString && typeof errorString === 'string') {
-								try {
-									const errorData: FastAPIError = JSON.parse(errorString);
-									errorMessage = errorData.detail || errorMessage;
-								} catch {
-									errorMessage = errorString;
-								}
-							}
-							toastStore.error(errorMessage);
-						} else if (result.type === 'error') {
-							toastStore.error('An unexpected error occurred while declining the payment');
-						} else if (result.type === 'success') {
-							toastStore.success(`Payment #${paymentId} declined`);
-							await invalidateAll();
-						}
-					};
-				}}
+				use:enhance={createFormEnhanceHandler({
+					failureMessage: 'Failed to decline payment',
+					errorMessage: 'An unexpected error occurred while declining the payment',
+					successMessage: `Payment #${paymentId} declined`
+				})}
 			>
 				<input type="hidden" name="paymentId" value={paymentId} />
 				<button
@@ -90,28 +79,11 @@
 			<form
 				method="POST"
 				action="?/confirm"
-				use:enhance={() => {
-					return async ({ result }) => {
-						if (result.type === 'failure') {
-							let errorMessage = 'Failed to confirm payment';
-							const errorString = result.data?.error;
-							if (errorString && typeof errorString === 'string') {
-								try {
-									const errorData: FastAPIError = JSON.parse(errorString);
-									errorMessage = errorData.detail || errorMessage;
-								} catch {
-									errorMessage = errorString;
-								}
-							}
-							toastStore.error(errorMessage);
-						} else if (result.type === 'error') {
-							toastStore.error('An unexpected error occurred while confirming the payment');
-						} else if (result.type === 'success') {
-							toastStore.success(`Payment #${paymentId} confirmed successfully`);
-							await invalidateAll();
-						}
-					};
-				}}
+				use:enhance={createFormEnhanceHandler({
+					failureMessage: 'Failed to confirm payment',
+					errorMessage: 'An unexpected error occurred while confirming the payment',
+					successMessage: `Payment #${paymentId} confirmed successfully`
+				})}
 			>
 				<input type="hidden" name="paymentId" value={paymentId} />
 				<button
@@ -128,48 +100,10 @@
 
 <div class="flex min-w-xs flex-col gap-4">
 	<!-- Search Input -->
-	<input
-		type="text"
-		bind:value={searchQuery}
-		placeholder="Search by username, name, or email..."
-		class="rounded-lg border px-4 py-2 text-gray-700"
-	/>
+	<SearchInput bind:value={searchQuery} placeholder="Search by username, name, or email..." />
 
 	<!-- Status Filter -->
-	<div class="flex gap-2">
-		<button
-			onclick={() => (statusFilter = 'pending')}
-			class="rounded-lg px-3 py-1.5 text-sm transition-colors {statusFilter === 'pending'
-				? 'bg-yellow-100 text-yellow-700'
-				: 'border hover:bg-gray-100 dark:hover:bg-gray-800'}"
-		>
-			Pending
-		</button>
-		<button
-			onclick={() => (statusFilter = 'confirmed')}
-			class="rounded-lg px-3 py-1.5 text-sm transition-colors {statusFilter === 'confirmed'
-				? 'bg-green-100 text-green-700'
-				: 'border hover:bg-gray-100 dark:hover:bg-gray-800'}"
-		>
-			Confirmed
-		</button>
-		<button
-			onclick={() => (statusFilter = 'declined')}
-			class="rounded-lg px-3 py-1.5 text-sm transition-colors {statusFilter === 'declined'
-				? 'bg-red-100 text-red-700'
-				: 'border hover:bg-gray-100 dark:hover:bg-gray-800'}"
-		>
-			Declined
-		</button>
-		<button
-			onclick={() => (statusFilter = 'all')}
-			class="rounded-lg px-3 py-1.5 text-sm transition-colors {statusFilter === 'all'
-				? 'bg-gray-200 dark:bg-gray-700'
-				: 'border hover:bg-gray-100 dark:hover:bg-gray-800'}"
-		>
-			All
-		</button>
-	</div>
+	<FilterButtons options={statusFilterOptions} bind:selected={statusFilter} />
 
 	<!-- Payments List -->
 	{#each filteredPayments as payment}

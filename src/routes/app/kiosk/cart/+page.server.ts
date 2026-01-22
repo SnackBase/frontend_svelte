@@ -2,7 +2,6 @@ import type { PageServerLoad, Actions } from './$types';
 import { getAuthSession, requireScope } from '$lib/server/auth-utils';
 import { fail } from '@sveltejs/kit';
 import { api } from '$lib/server/api-client';
-import { error } from 'console';
 import { AUTH_KEYCLOAK_ISSUER, AUTH_KEYCLOAK_ID, AUTH_KEYCLOAK_SECRET } from '$env/static/private';
 
 // Define the user type for kiosk checkout
