@@ -27,7 +27,7 @@
 	let isCheckingOut = $state(false);
 	let checkoutForm = $state<HTMLFormElement>();
 
-	function handleCheckoutClick() {
+	function populateCartItems() {
 		if (!checkoutForm) return;
 
 		// Update hidden input with current cart items
@@ -40,9 +40,17 @@
 		if (itemsInput) {
 			itemsInput.value = JSON.stringify(items);
 		}
+	}
 
-		// Submit the form
+	function handleCheckoutClick() {
+		if (!checkoutForm) return;
+		populateCartItems();
 		checkoutForm.requestSubmit();
+	}
+
+	function handleFormSubmit() {
+		// Ensure items are populated for any form submission (including Enter key)
+		populateCartItems();
 	}
 
 	function handleClearCart() {
@@ -133,6 +141,7 @@
 				bind:this={checkoutForm}
 				method="POST"
 				action="?/checkout"
+				onsubmit={handleFormSubmit}
 				use:enhance={() => {
 					isCheckingOut = true;
 
