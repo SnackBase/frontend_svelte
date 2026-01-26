@@ -76,6 +76,19 @@ export const load: LayoutServerLoad = async (event) => {
 		}
 	}
 
+	// Fetch currency config
+	let currencyConfig = null;
+	if (session?.accessToken) {
+		try {
+			const response = await api.get('/config/currency', session.accessToken);
+			if (response.ok) {
+				currencyConfig = await response.json();
+			}
+		} catch {
+			// Silently fail - will use default currency
+		}
+	}
+
 	return {
 		session: session
 			? {
@@ -86,6 +99,7 @@ export const load: LayoutServerLoad = async (event) => {
 		navbarLinks,
 		showShoppingCart,
 		cartUrl,
-		balance
+		balance,
+		currencyConfig
 	};
 };

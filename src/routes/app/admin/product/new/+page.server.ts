@@ -1,9 +1,7 @@
-import { Product } from '$lib/types/product.svelte';
 import type { ProductData } from '$lib/types/productData.svelte';
 import {
 	parseCurrencyInput,
 	PRODUCT_TYPES,
-	CURRENCIES,
 	ALLOWED_IMAGE_TYPES,
 	MAX_FILE_SIZE,
 	PRODUCTS_ENDPOINT
@@ -30,7 +28,6 @@ export const actions = {
 		const name = data.get('name');
 		const price = data.get('price');
 		const type = data.get('type');
-		const currency = data.get('currency');
 		const image = data.get('image');
 		const ageRestrict = data.get('ageRestrict');
 
@@ -38,7 +35,6 @@ export const actions = {
 		if (!name) return fail(400, { missing: true, details: 'Product name is required.' });
 		if (!price) return fail(400, { missing: true, details: 'Price is required.' });
 		if (!type) return fail(400, { missing: true, details: 'Product type is required.' });
-		if (!currency) return fail(400, { missing: true, details: 'Currency is required.' });
 		if (!image) return fail(400, { missing: true, details: 'Product image is required.' });
 
 		// Validate image is a File object and not empty
@@ -80,14 +76,6 @@ export const actions = {
 			});
 		}
 
-		// Validate currency against available currencies
-		if (!CURRENCIES.some((c) => c.code === currency.toString())) {
-			return fail(422, {
-				missing: true,
-				details: `Invalid currency. Must be one of: ${CURRENCIES.map((c) => c.code).join(', ')}`
-			});
-		}
-
 		// Parse and validate price (handles both comma and dot as decimal separator)
 		const parsedPrice = parseCurrencyInput(price.toString());
 		if (parsedPrice <= 0) {
@@ -104,7 +92,6 @@ export const actions = {
 			backendFormData.append('name', name.toString());
 			backendFormData.append('price', parsedPrice.toString());
 			backendFormData.append('type', type.toString());
-			backendFormData.append('currency', currency.toString());
 			backendFormData.append('image', image); // File object
 			if (ageRestrict !== null) backendFormData.append('ageRestrict', ageRestrict.toString());
 

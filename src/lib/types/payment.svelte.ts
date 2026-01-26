@@ -1,4 +1,5 @@
-import { formatCurrency, getCurrencyConfig, type CurrencyConfig } from '$lib/constants/product';
+import { formatCurrency, type CurrencyConfig } from '$lib/constants/product';
+import { configStore } from '$lib/stores/configStore.svelte';
 import { User, type UserData } from './userData.svelte';
 import { toDate, toDateOrNull } from '$lib/utils/dateUtils';
 
@@ -42,8 +43,8 @@ export class Payment {
 		return formatCurrency(this.amount, this.getCurrencyConfig());
 	}
 
-	// Get currency config (defaults to EUR)
+	// Get currency config from global store
 	getCurrencyConfig(): CurrencyConfig {
-		return getCurrencyConfig('EUR');
+		return configStore.currency;
 	}
 }

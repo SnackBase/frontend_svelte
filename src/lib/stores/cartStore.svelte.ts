@@ -1,5 +1,6 @@
 import { Product } from '$lib/types/product.svelte';
-import { formatCurrency, CURRENCIES } from '$lib/constants/product';
+import { formatCurrency } from '$lib/constants/product';
+import { configStore } from './configStore.svelte';
 
 class CartStore {
 	products = $state<Product[]>([]);
@@ -14,10 +15,7 @@ class CartStore {
 	}
 
 	get formattedTotalPrice(): string {
-		// Get currency from first product in cart, or default to first currency
-		const firstProduct = this.cartItems[0];
-		const currencyConfig = firstProduct ? firstProduct.getCurrencyConfig() : CURRENCIES[0];
-		return formatCurrency(this.totalPrice, currencyConfig);
+		return formatCurrency(this.totalPrice, configStore.currency);
 	}
 
 	get cartItems(): Product[] {

@@ -1,18 +1,25 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import person from '$lib/assets/person.svg';
 	import NavBarPageLink from '$lib/components/NavBarPageLink.svelte';
 	import ToastContainer from '$lib/components/ToastContainer.svelte';
 	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { cartStore } from '$lib/stores/cartStore.svelte';
-	import { formatCurrency, getCurrencyConfig } from '$lib/constants/product';
+	import { configStore } from '$lib/stores/configStore.svelte';
+	import { formatCurrency } from '$lib/constants/product';
 
 	let { children, data } = $props();
 
+	// Set currency config from server data
+	$effect(() => {
+		if (data.currencyConfig) {
+			configStore.setCurrency(data.currencyConfig);
+		}
+	});
+
 	const formattedBalance = $derived(
 		data.balance !== null && data.balance !== undefined
-			? formatCurrency(data.balance, getCurrencyConfig('EUR'))
+			? formatCurrency(data.balance, configStore.currency)
 			: null
 	);
 </script>
@@ -59,7 +66,7 @@
 					<!-- Account Balance -->
 					<a
 						href="/app/customer/payments"
-						class="text-sm font-semibold {data.balance >= 0 ? 'text-green-500' : 'text-red-500'}"
+						class="text-sm font-semibold {data.balance! >= 0 ? 'text-green-500' : 'text-red-500'}"
 						title="Account Balance"
 					>
 						{formattedBalance}

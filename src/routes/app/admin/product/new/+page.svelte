@@ -4,7 +4,7 @@
 	import FormSelect from '$lib/components/FormSelect.svelte';
 	import CurrencyInput from '$lib/components/CurrencyInput.svelte';
 	import FileUpload from '$lib/components/FileUpload.svelte';
-	import { formatProductPrice, PRODUCT_TYPES, ALLOWED_IMAGE_TYPES } from '$lib/constants/product';
+	import { PRODUCT_TYPES, ALLOWED_IMAGE_TYPES } from '$lib/constants/product';
 	import type { PageData } from './$types';
 	import { capitalizeFirstLetter } from '$lib/utils/capitalize';
 	import ButtonStyle from '$lib/styles/ButtonStyle.svelte';
@@ -27,7 +27,6 @@
 	// Form state
 	let productType = $state(''); //typeOptions[0].value
 	let price = $state(0);
-	let currencyCode = $state('EUR');
 </script>
 
 {#if form?.success}
@@ -86,7 +85,6 @@
 				name="price"
 				label="Price"
 				bind:value={price}
-				bind:currencyCode
 				required
 			/>
 

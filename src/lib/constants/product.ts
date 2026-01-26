@@ -1,3 +1,4 @@
+import { configStore } from '$lib/stores/configStore.svelte';
 import type { ProductData } from '$lib/types/productData.svelte';
 
 // Backend API Endpoints
@@ -57,7 +58,7 @@ export function formatCurrency(amount: number, currencyConfig: CurrencyConfig): 
 
 // Helper function to format price of product
 export const formatProductPrice = (product: ProductData) => {
-	const currencyConfig = getCurrencyConfig(product.currency);
+	const currencyConfig = configStore.currency;
 	return formatCurrency(product.price, currencyConfig);
 };
 

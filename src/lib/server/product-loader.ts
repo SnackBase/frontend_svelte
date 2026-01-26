@@ -17,8 +17,6 @@ function isValidSingleProductData(data: unknown): data is ProductData {
 		typeof data.price === 'number' &&
 		'type' in data &&
 		typeof data.type === 'string' &&
-		'currency' in data &&
-		typeof data.currency === 'string' &&
 		'image' in data &&
 		typeof data.image === 'string'
 	);
@@ -55,7 +53,9 @@ export async function loadProducts(accessToken?: string): Promise<ProductData[]>
 				})
 				.then((data: unknown) => {
 					if (!isValidProductData(data)) {
-						throw new Error('Invalid product data structure received from API');
+						throw new Error(
+							'Invalid product data structure received from API' + JSON.stringify(data)
+						);
 					}
 					return data;
 				})
@@ -86,7 +86,9 @@ export async function loadProductById(
 		const response = await api.get(`/products/${productId}`, accessToken);
 
 		if (!response.ok) {
-			throw new Error(`Failed to fetch product ${productId}: ${response.status} ${response.statusText}`);
+			throw new Error(
+				`Failed to fetch product ${productId}: ${response.status} ${response.statusText}`
+			);
 		}
 
 		const data: unknown = await response.json();

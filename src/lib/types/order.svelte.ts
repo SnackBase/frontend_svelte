@@ -2,6 +2,7 @@ import { Product } from './product.svelte';
 import type { ProductData } from './productData.svelte';
 import { User, type UserData } from './userData.svelte';
 import { formatCurrency } from '$lib/constants/product';
+import { configStore } from '$lib/stores/configStore.svelte';
 import { toDate, toDateOrNull } from '$lib/utils/dateUtils';
 
 // Interface for order item data from API
@@ -65,9 +66,8 @@ export class Order {
 		return new User(this.user).getFullName();
 	}
 
-	// Format total per order with currency (uses first item's currency)
+	// Format total per order with currency
 	getFormattedTotal(): string {
-		if (this.items.length === 0) return '';
-		return formatCurrency(this.totalPerOrder, this.items[0].getCurrencyConfig());
+		return formatCurrency(this.totalPerOrder, configStore.currency);
 	}
 }

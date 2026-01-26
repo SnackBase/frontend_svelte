@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { CURRENCIES, INPUT_NUMBER_CLASS, INPUT_BASE_CLASS } from '$lib/constants/product';
+	import { INPUT_BASE_CLASS, INPUT_NUMBER_CLASS } from '$lib/constants/product';
+	import { configStore } from '$lib/stores/configStore.svelte';
 
 	interface Props {
 		id: string;
@@ -7,49 +8,26 @@
 		label: string;
 		required?: boolean;
 		value?: number;
-		currencyCode?: string;
 	}
 
-	let {
-		id,
-		name,
-		label,
-		required = false,
-		value = $bindable(0),
-		currencyCode = $bindable(CURRENCIES[0].code)
-	}: Props = $props();
-
-	// Get selected currency
-	const selectedCurrency = $derived(
-		CURRENCIES.find((c) => c.code === currencyCode) || CURRENCIES[0]
-	);
+	let { id, name, label, required = false, value = $bindable(0) }: Props = $props();
 </script>
 
 <div class="flex flex-col gap-1">
 	<label for={id} class="block">{label}</label>
-	<div class="flex flex-col gap-2 sm:flex-row">
-		<div class="relative flex-1">
-			<input
-				{id}
-				{name}
-				type="text"
-				inputmode="decimal"
-				placeholder="0.00"
-				{required}
-				class={INPUT_NUMBER_CLASS}
-			/>
-			<span class="absolute top-1/2 right-4 -translate-y-1/2 text-gray-500">
-				{selectedCurrency.symbol}
-			</span>
-		</div>
-
-		{#if CURRENCIES.length > 1}
-			<select bind:value={currencyCode} class="{INPUT_BASE_CLASS} w-32">
-				{#each CURRENCIES as currency}
-					<option value={currency.code}>{currency.code}</option>
-				{/each}
-			</select>
-		{/if}
+	<div class="flex flex-row items-center">
+		<input
+			{id}
+			{name}
+			type="text"
+			inputmode="decimal"
+			placeholder="0.00"
+			{required}
+			class="{INPUT_NUMBER_CLASS} w-full"
+		/>
+		<!-- TODO: remove space to the right -->
+		<span class="relative right-6 text-gray-500">
+			{configStore.currency.symbol}
+		</span>
 	</div>
-	<input type="hidden" name="currency" value={selectedCurrency.code} />
 </div>
