@@ -55,7 +55,7 @@
 			</div>
 		</div>
 		<div class="flex w-full">
-			<a href="/app/admin/product/new" class="flex w-full"
+			<a href="/app/admin/products/new" class="flex w-full"
 				><ButtonStyle style="w-full justify-center">New Product</ButtonStyle></a
 			>
 		</div>
@@ -80,13 +80,7 @@
 		<form method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
 			<FormField id="name" name="name" label="Product Name" placeholder="Cola 0,33 L" required />
 
-			<CurrencyInput
-				id="price"
-				name="price"
-				label="Price"
-				bind:value={price}
-				required
-			/>
+			<CurrencyInput id="price" name="price" label="Price" bind:value={price} required />
 
 			<FormSelect
 				id="type"

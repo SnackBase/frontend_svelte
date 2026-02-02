@@ -9,6 +9,6 @@
 	<div class="text-shadow flex justify-center text-2xl font-bold shadow-white">Admin Dashboard</div>
 
 	<div class="flex">
-		<a href="/app/admin/product/new"><ButtonStyle>New Product</ButtonStyle></a>
+		<a href="/app/admin/products/new"><ButtonStyle>New Product</ButtonStyle></a>
 	</div>
 </div>
