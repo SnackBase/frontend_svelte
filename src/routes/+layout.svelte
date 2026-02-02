@@ -36,9 +36,12 @@
 <div class="flex min-h-screen flex-col font-sans dark:bg-gray-950 dark:text-white">
 	<!-- HEADER -->
 	<header class="w-full">
-		<div class="mx-auto grid h-16 max-w-7xl grid-cols-3 items-center gap-2 px-4 sm:gap-4">
+		<div class="mx-auto grid h-16 max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-2 px-4 sm:gap-4">
 			<!-- Left Section: Logo -->
-			<a href="/" class="flex shrink-0 items-center gap-2 hover:text-blue-500 sm:gap-4">
+			<a
+				href="/"
+				class="flex shrink-0 items-center justify-start gap-2 hover:text-blue-500 sm:gap-4"
+			>
 				<!-- <img src="/favicon.ico" width="40" alt="Logo" class="hover:fill-blue-500 dark:invert" /> -->
 				<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
 					<path
