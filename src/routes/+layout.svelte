@@ -194,7 +194,7 @@
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<!-- Menu panel: right-aligned, ~3/4 width, full height -->
 			<div
-				class="absolute top-0 right-0 bottom-0 flex w-xs flex-col border-l bg-white shadow-lg dark:border-gray-700 dark:bg-gray-950"
+				class="absolute top-0 right-0 bottom-0 flex w-48 flex-col border-l bg-white shadow-lg dark:border-gray-700 dark:bg-gray-950"
 				onclick={(e) => e.stopPropagation()}
 				onkeydown={(e) => e.key === 'Escape' && closeMobileMenu()}
 			>
