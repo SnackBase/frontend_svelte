@@ -24,7 +24,6 @@ export const actions = {
 		const session = await getAuthSession(event);
 
 		const data = await event.request.formData();
-		console.log(data);
 		const name = data.get('name');
 		const price = data.get('price');
 		const type = data.get('type');

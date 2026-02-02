@@ -10,8 +10,6 @@ export const load = (async (event) => {
 	let response = await api.get('/payments', session?.accessToken);
 	let payments_data: PaymentData[] = await response.json();
 
-	console.log(payments_data);
-
 	return { payments_data };
 }) satisfies PageServerLoad;
 

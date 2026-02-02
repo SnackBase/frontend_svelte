@@ -12,6 +12,7 @@ declare global {
 				};
 				accessToken?: string;
 				scopes?: string[];
+				error?: string; // "RefreshTokenError" when token refresh fails
 			} | null>;
 		}
 		// interface PageData {}

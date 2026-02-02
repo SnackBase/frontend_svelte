@@ -2,7 +2,7 @@ import { handle as auth_handle } from './auth';
 import { sequence } from '@sveltejs/kit/hooks';
 import type { Handle } from '@sveltejs/kit';
 import { getAuthSession, checkRouteIfAuthorized } from '$lib/server/auth-utils';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
 // Redirect /favicon.ico to the favicon.svg file
 const faviconHandler: Handle = async ({ event, resolve }) => {
@@ -14,6 +14,17 @@ const faviconHandler: Handle = async ({ event, resolve }) => {
 			}
 		});
 	}
+	return resolve(event);
+};
+
+// Handle token refresh errors by redirecting to sign-out
+const tokenErrorHandler: Handle = async ({ event, resolve }) => {
+	const session = await getAuthSession(event);
+
+	if (session?.error === 'RefreshTokenError') {
+		redirect(307, '/auth/signout');
+	}
+
 	return resolve(event);
 };
 
@@ -31,4 +42,5 @@ const scopeProtection: Handle = async ({ event, resolve }) => {
 };
 
 // Combine all handlers
-export const handle = sequence(faviconHandler, auth_handle, scopeProtection);
+// Order: favicon -> auth -> token error check -> scope protection
+export const handle = sequence(faviconHandler, auth_handle, tokenErrorHandler, scopeProtection);

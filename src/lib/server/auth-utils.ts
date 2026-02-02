@@ -12,6 +12,7 @@ export interface ExtendedSession {
 	};
 	accessToken?: string;
 	scopes?: string[];
+	error?: string; // "RefreshTokenError" when token refresh fails
 }
 
 /**
