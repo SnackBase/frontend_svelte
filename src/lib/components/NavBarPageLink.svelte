@@ -16,7 +16,7 @@
 <a
 	{href}
 	aria-current={isActive ? 'page' : undefined}
-	class="rounded-full px-4 py-2 font-semibold whitespace-nowrap transition-colors hover:text-blue-500 {isActive
-		? 'border'
-		: 'border border-transparent'}">{capitalizeFirstLetter(name)}</a
+	class="px-4 py-2 font-semibold whitespace-nowrap transition-colors hover:text-blue-500 {isActive
+		? 'underline underline-offset-4 decoration-2'
+		: ''}">{capitalizeFirstLetter(name)}</a
 >
