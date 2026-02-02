@@ -12,6 +12,5 @@
 
 	<div class="flex gap-4">
 		<a href="/app/customer/shop"><ButtonStyle>Shop</ButtonStyle></a>
-		<!-- TODO: add balance etc.-->
 	</div>
 </div>

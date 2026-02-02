@@ -20,7 +20,6 @@ export const load: PageServerLoad = async (event) => {
 	const session = await getAuthSession(event);
 	requireScope(session, 'kiosk');
 
-	// TODO: Replace with actual backend endpoint to fetch users
 	// For now, return mock data
 	const users: KioskUser[] = await fetchKioskUsers(session?.accessToken);
 
@@ -31,7 +30,6 @@ export const load: PageServerLoad = async (event) => {
 
 /**
  * Fetch the list of users available for kiosk checkout
- * TODO: Replace this with your actual backend endpoint
  */
 async function fetchKioskUsers(accessToken?: string): Promise<KioskUser[]> {
 	// Mock implementation - replace with actual API call
@@ -91,7 +89,6 @@ export const actions: Actions = {
 			}
 
 			// Authenticate using Keycloak Direct Access Grant (Resource Owner Password Credentials)
-			// TODO: Uncomment and configure when ready to use real Keycloak authentication
 
 			const tokenResponse = await event.fetch(`${keycloakUrl}/protocol/openid-connect/token`, {
 				method: 'POST',

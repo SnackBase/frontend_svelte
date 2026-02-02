@@ -54,18 +54,6 @@ export const POST: RequestHandler = async (event) => {
 			);
 		}
 
-		// Simulate processing delay
-		// await new Promise((resolve) => setTimeout(resolve, 500));
-
-		// Dummy checkout logic - in a real app, this would:
-		// - Verify product availability
-		// - Calculate total price
-		// - Process payment
-		// - Create order record
-		// - Send confirmation email
-
-		// const orderId = Math.random().toString(36).substring(2, 15);
-
 		const response = await api.post('/orders', body, accessToken);
 
 		if (!response.ok) {
