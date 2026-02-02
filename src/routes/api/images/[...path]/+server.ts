@@ -39,7 +39,6 @@ export const GET: RequestHandler = async (event) => {
 			}
 		});
 	} catch (err) {
-		console.error('Image proxy error:', err);
 		throw error(500, 'Failed to load image');
 	}
 };
