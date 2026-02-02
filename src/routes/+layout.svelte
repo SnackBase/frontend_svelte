@@ -10,6 +10,8 @@
 
 	let { children, data } = $props();
 
+	let mobileMenuOpen = $state(false);
+
 	// Set currency config from server data
 	$effect(() => {
 		if (data.currencyConfig) {
@@ -22,6 +24,12 @@
 			? formatCurrency(data.balance, configStore.currency)
 			: null
 	);
+
+	const alwaysBurger = $derived((data.navbarLinks?.length ?? 0) > 3);
+
+	function closeMobileMenu() {
+		mobileMenuOpen = false;
+	}
 </script>
 
 <svelte:head>
@@ -36,7 +44,9 @@
 <div class="flex min-h-screen flex-col font-sans dark:bg-gray-950 dark:text-white">
 	<!-- HEADER -->
 	<header class="w-full">
-		<div class="mx-auto grid h-16 max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-2 px-4 sm:gap-4">
+		<div
+			class="mx-auto grid h-16 max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-2 px-4 sm:gap-4"
+		>
 			<!-- Left Section: Logo -->
 			<a
 				href="/"
@@ -52,18 +62,19 @@
 				<h1 class="hidden text-xl font-semibold sm:block">DrinkBar</h1>
 			</a>
 
-			<!-- Center Section: Navigation Links -->
-			{#if data.navbarLinks && data.navbarLinks.length > 0}
-				<nav class="flex justify-center gap-2 sm:gap-3 lg:gap-4">
+			<!-- Center Section: Navigation Links (hidden on mobile, visible md+ unless >3 links) -->
+			{#if data.navbarLinks && data.navbarLinks.length > 0 && !alwaysBurger}
+				<nav class="hidden justify-center gap-2 sm:gap-3 md:flex lg:gap-4">
 					{#each data.navbarLinks as link}
 						<NavBarPageLink name={link.name} route={link.route} />
 					{/each}
 				</nav>
+				<div class="md:hidden"></div>
 			{:else}
 				<div></div>
 			{/if}
 
-			<!-- Right Section: Balance, Cart and Auth -->
+			<!-- Right Section: Balance, Cart, Auth and Burger -->
 			<div class="flex shrink-0 items-center justify-end gap-1 sm:gap-2">
 				{#if formattedBalance !== null}
 					<!-- Account Balance -->
@@ -99,45 +110,69 @@
 					</a>
 				{/if}
 
-				{#if data.session?.user?.email}
-					<button
-						onclick={() => signOut({ callbackUrl: '/', redirect: true })}
-						class="w-max-1 flex size-10 shrink-0 items-center justify-center rounded-full p-2 transition-colors hover:text-blue-500 sm:size-full sm:w-auto sm:gap-2 sm:px-4"
-						aria-label="Log Out"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							class="shrink-0"
+				<!-- Auth buttons (hidden on mobile; also hidden on desktop when >3 links) -->
+				{#if !alwaysBurger}
+					{#if data.session?.user?.email}
+						<button
+							onclick={() => signOut({ callbackUrl: '/', redirect: true })}
+							class="hidden shrink-0 items-center justify-center rounded-full p-2 transition-colors hover:text-blue-500 md:flex md:gap-2 md:px-4"
+							aria-label="Log Out"
 						>
-							<path
-								fill="currentColor"
-								d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"
-							/>
-						</svg>
-						<!-- <div class="hidden sm:block">Log Out</div> -->
-					</button>
-				{:else}
-					<button
-						onclick={() => signIn('keycloak')}
-						class="flex size-10 shrink-0 items-center justify-center rounded-full p-2 transition-colors hover:text-blue-500 sm:w-auto sm:gap-2 sm:rounded-full sm:px-4"
-						aria-label="Log In"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							class="shrink-0"
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								class="shrink-0"
+							>
+								<path
+									fill="currentColor"
+									d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"
+								/>
+							</svg>
+						</button>
+					{:else}
+						<button
+							onclick={() => signIn('keycloak')}
+							class="hidden shrink-0 items-center justify-center rounded-full p-2 transition-colors hover:text-blue-500 md:flex md:gap-2 md:px-4"
+							aria-label="Log In"
 						>
-							<path
-								fill="currentColor"
-								d="M12 21v-2h7V5h-7V3h7q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm-2-4l-1.375-1.45l2.55-2.55H3v-2h8.175l-2.55-2.55L10 7l5 5z"
-							/>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								class="shrink-0"
+							>
+								<path
+									fill="currentColor"
+									d="M12 21v-2h7V5h-7V3h7q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm-2-4l-1.375-1.45l2.55-2.55H3v-2h8.175l-2.55-2.55L10 7l5 5z"
+								/>
+							</svg>
+						</button>
+					{/if}
+				{/if}
+
+				<!-- Burger button: always on mobile, always on desktop when >3 links -->
+				{#if data.navbarLinks && data.navbarLinks.length > 0}
+					<button
+						onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
+						class="rounded-md p-2 transition-colors hover:text-blue-500 {alwaysBurger
+							? ''
+							: 'md:hidden'}"
+						aria-label="Toggle navigation menu"
+						aria-expanded={mobileMenuOpen}
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+							{#if mobileMenuOpen}
+								<path
+									fill="currentColor"
+									d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"
+								/>
+							{:else}
+								<path fill="currentColor" d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z" />
+							{/if}
 						</svg>
-						<!-- <div class="hidden sm:block">Log In</div> -->
 					</button>
 				{/if}
 			</div>
@@ -145,6 +180,87 @@
 
 		{@render colorGradientHorizontalLine()}
 	</header>
+
+	<!-- Burger Navigation Menu (above all page content) -->
+	{#if mobileMenuOpen && data.navbarLinks && data.navbarLinks.length > 0}
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<div
+			class="fixed inset-0 z-50 {alwaysBurger ? '' : 'md:hidden'}"
+			onclick={closeMobileMenu}
+			onkeydown={(e) => e.key === 'Escape' && closeMobileMenu()}
+		>
+			<!-- Backdrop -->
+			<div class="absolute inset-0 bg-black/30"></div>
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
+			<!-- Menu panel: right-aligned, ~3/4 width, full height -->
+			<div
+				class="absolute top-0 right-0 bottom-0 flex w-xs flex-col border-l bg-white shadow-lg dark:border-gray-700 dark:bg-gray-950"
+				onclick={(e) => e.stopPropagation()}
+				onkeydown={(e) => e.key === 'Escape' && closeMobileMenu()}
+			>
+				<!-- Nav links -->
+				<nav class="flex flex-col gap-1 p-4">
+					{#each data.navbarLinks as link}
+						<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+						<span onclick={closeMobileMenu}>
+							<NavBarPageLink name={link.name} route={link.route} />
+						</span>
+					{/each}
+				</nav>
+
+				<!-- Logout/Login at bottom (matches footer height) -->
+				<div class="mt-auto">
+					<div class="p-4">
+						{#if data.session?.user?.email}
+							<button
+								onclick={() => {
+									closeMobileMenu();
+									signOut({ callbackUrl: '/', redirect: true });
+								}}
+								class="flex w-full items-center gap-3 font-semibold transition-colors hover:text-blue-500"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									class="shrink-0"
+								>
+									<path
+										fill="currentColor"
+										d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"
+									/>
+								</svg>
+								Log Out
+							</button>
+						{:else}
+							<button
+								onclick={() => {
+									closeMobileMenu();
+									signIn('keycloak');
+								}}
+								class="flex w-full items-center gap-3 font-semibold transition-colors hover:text-blue-500"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									class="shrink-0"
+								>
+									<path
+										fill="currentColor"
+										d="M12 21v-2h7V5h-7V3h7q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm-2-4l-1.375-1.45l2.55-2.55H3v-2h8.175l-2.55-2.55L10 7l5 5z"
+									/>
+								</svg>
+								Log In
+							</button>
+						{/if}
+					</div>
+				</div>
+			</div>
+		</div>
+	{/if}
 
 	<!-- MAIN CONTENT (GROWS) -->
 	<main class="flex w-full flex-1 flex-col py-4">
