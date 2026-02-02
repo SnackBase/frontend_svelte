@@ -22,7 +22,7 @@
 	}
 </script>
 
-<div class="flex flex-col gap-4">
+<div class="flex w-xs flex-col gap-4">
 	<!-- Toggle Button -->
 	<button
 		onclick={toggleForm}

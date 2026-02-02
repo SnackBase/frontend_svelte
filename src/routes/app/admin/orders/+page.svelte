@@ -85,7 +85,7 @@
 	</form>
 {/snippet}
 
-<div class="flex min-w-xs flex-col gap-4">
+<div class="flex w-xs flex-col gap-4">
 	<!-- Search Input -->
 	<SearchInput bind:value={searchQuery} placeholder="Search by username, name, or email..." />
 

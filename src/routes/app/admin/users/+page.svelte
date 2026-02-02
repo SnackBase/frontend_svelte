@@ -18,7 +18,7 @@
 	);
 </script>
 
-<div class="flex min-w-xs flex-col gap-4">
+<div class="flex w-xs flex-col gap-4">
 	<h1 class="text-2xl font-bold">Users</h1>
 
 	<SearchInput bind:value={searchQuery} placeholder="Search by username, name, or email..." />

@@ -9,7 +9,7 @@
 	const orders = $derived(data.order_data.map((order: OrderData) => new Order(order)));
 </script>
 
-<div class="flex min-w-xs flex-col gap-4">
+<div class="flex w-xs flex-col gap-4">
 	{#each orders as order}
 		<OrderDisplay {order} showUser={false} />
 	{/each}
