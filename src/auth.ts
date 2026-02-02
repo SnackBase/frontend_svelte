@@ -35,8 +35,6 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
 			throw new Error(refreshedTokens.error_description || 'Token refresh failed');
 		}
 
-		console.log('Token refreshed successfully');
-
 		// Return updated token with new values
 		return {
 			...token,

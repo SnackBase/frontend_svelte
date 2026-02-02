@@ -42,7 +42,7 @@
 			<img
 				src={product?.getProxiedImageUrl()}
 				alt={product?.name}
-				class="h-32 max-w-64 rounded-2xl bg-white object-contain"
+				class="aspect-square h-32 max-w-64 rounded-2xl bg-white object-contain"
 			/>
 			<div class="flex flex-col">
 				<div class="max-w-64 truncate text-xl font-bold sm:max-w-sm">{product?.name}</div>

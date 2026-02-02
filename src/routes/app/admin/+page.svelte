@@ -11,5 +11,6 @@
 	<div class="flex gap-4">
 		<a href="/app/admin/products"><ButtonStyle>Products</ButtonStyle></a>
 		<a href="/app/admin/products/new"><ButtonStyle>New Product</ButtonStyle></a>
+		<a href="/app/admin/users"><ButtonStyle>Users</ButtonStyle></a>
 	</div>
 </div>

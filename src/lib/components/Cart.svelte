@@ -65,7 +65,7 @@
 		<img
 			src={product.getProxiedImageUrl()}
 			alt={product.name}
-			class="size-18 rounded-2xl bg-white object-cover"
+			class="aspect-square size-18 rounded-2xl bg-white object-cover"
 		/>
 
 		<div class="flex flex-1 flex-col justify-between">

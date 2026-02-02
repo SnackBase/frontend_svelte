@@ -17,7 +17,7 @@
 		<img
 			src={item.getProxiedImageUrl()}
 			alt={item.name}
-			class="size-18 rounded-2xl bg-white object-cover"
+			class="aspect-square size-18 rounded-2xl bg-white object-cover"
 		/>
 
 		<div class="flex w-full flex-col">
